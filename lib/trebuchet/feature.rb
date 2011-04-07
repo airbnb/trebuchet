@@ -15,7 +15,7 @@ class Trebuchet::Feature
   end
 
   def launch_at?(user)
-    strategy.launch_at?(user)
+    !user.nil? && strategy.launch_at?(user)
   end
 
   def aim(strategy_name, options = nil)

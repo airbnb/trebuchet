@@ -1,5 +1,7 @@
 class Trebuchet
 
+  VERSION = "0.0.1"
+
   def self.backend
     self.backend = :memory unless defined? @@backend
     @@backend
@@ -20,6 +22,10 @@ class Trebuchet
 
   def self.feature(name)
     Feature.find(name)
+  end
+
+  def self.use_with_rails!
+    ::ActionController::Base.send(:include, Trebuchet::ActionController)
   end
 
   def initialize(current_user, request = nil)
@@ -49,3 +55,4 @@ require 'trebuchet/strategy/percentage'
 require 'trebuchet/strategy/user_id'
 require 'trebuchet/strategy/custom'
 require 'trebuchet/strategy/multiple'
+require 'trebuchet/action_controller'

@@ -1,13 +1,11 @@
-module Trebuchet
-  module ActionController
-    def self.included(base)
-      base.helper_method :trebuchet
-    end
+module Trebuchet::ActionController
 
-    def trebuchet
-      @trebuchet ||= Trebuchet.new(current_user, request)
-    end
+  def self.included(base)
+    base.helper_method :trebuchet
   end
-end
 
-ActionController::Base.send(:include, Trebuchet::ActionController)
+  def trebuchet
+    @trebuchet ||= Trebuchet.new(current_user, request)
+  end
+
+end

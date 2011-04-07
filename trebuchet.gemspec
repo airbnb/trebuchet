@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "trebuchet/version"
+require 'trebuchet'
 
 Gem::Specification.new do |s|
   s.name        = "trebuchet"
@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Tobi Knaup"]
   s.email       = ["tobi.knaup@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "http://www.airbnb.com"
   s.summary     = %q{Trebuchet launches features at people}
-  s.description = %q{Trebuchet launches features at people}
+  s.description = %q{Wisely choose a strategy, aim, and launch!}
 
   s.rubyforge_project = "trebuchet"
 
