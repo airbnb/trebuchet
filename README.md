@@ -4,6 +4,15 @@ Trebuchet
 Trebuchet launches features at people. Wisely choose a strategy, aim, and launch!
 
 
+Setup
+-----
+
+Trebuchet can be used with Rails or standalone.
+In a Rails initializer do:
+
+    Trebuchet.use_with_rails!
+
+
 Aim
 ---
 
