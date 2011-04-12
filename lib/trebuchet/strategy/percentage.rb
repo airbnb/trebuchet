@@ -7,7 +7,7 @@ class Trebuchet::Strategy::Percentage
   end
 
   def launch_at?(user)
-    user.id % (100 / percentage) == 0
+    user.id % 100 < percentage
   end
 
 end
