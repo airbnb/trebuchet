@@ -1,0 +1,19 @@
+<div id="trebuchet">
+	<h1>Trebuchet Admin</h1>
+	<table class="treb-features">
+		<thead>
+			<tr>
+				<th>Feature Name</th>
+				<th>Launch Strategy</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @features.each do |feature| %>
+				<tr>
+					<td><%= feature.name %></td>
+					<td><%= strategy feature.strategy %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>
