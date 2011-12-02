@@ -10,7 +10,7 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
   end
 
   def launch_at?(user)
-    strategies.find { |s| s.launch_at?(user) }
+    !!(strategies.find { |s| s.launch_at?(user) })
   end
   
   def as_json(options = {})

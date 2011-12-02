@@ -10,5 +10,11 @@ describe Trebuchet::Strategy::Default do
     Trebuchet::Strategy::Default.strategy_name.should == :default
     Trebuchet.feature('whatever').strategy.name.should == :default
   end
+  
+  it "should always return false" do
+    Trebuchet.feature('time_machine').aim(:default)
+    t = Trebuchet.new User.new(1)
+    t.launch?('time_machine').should === false
+  end
 
 end

@@ -13,6 +13,12 @@ describe Trebuchet::Backend::Disabled do
     Trebuchet::Feature.all.should eql []
   end
   
+  it "should always return false" do
+    Trebuchet.feature('time_machine').aim(:disabled)
+    t = Trebuchet.new User.new(1)
+    t.launch?('time_machine').should === false
+  end
+  
   after do
     Trebuchet.backend = :memory
   end

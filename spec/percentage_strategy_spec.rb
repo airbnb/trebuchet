@@ -27,5 +27,13 @@ describe Trebuchet::Strategy::Percentage do
     should_not_launch('percentage', [0 - (offset - 1)])
     should_not_launch('percentage', [0 - (offset + 1)])
   end
+  
+  it "should always return booleans" do
+    Trebuchet.feature('percentage').aim(:percent, 1)
+    t = Trebuchet.new User.new(0 - offset)
+    t.launch?('percentage').should === true
+    t = Trebuchet.new User.new(0 - (offset - 1))
+    t.launch?('percentage').should === false
+  end
 
 end

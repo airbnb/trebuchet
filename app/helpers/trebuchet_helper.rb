@@ -32,7 +32,8 @@ module TrebuchetHelper
   end
   
   def percent_strategy(strategy)
-    percent, offset = strategy.percentage, strategy.offset
+    percent = strategy.percentage
+    offset = strategy.offset
     low_id = (0 + offset).to_s.rjust(2, '0')
     high_id = (percent + offset - 1).to_s.rjust(2, '0')
     str = "#{percent}%"

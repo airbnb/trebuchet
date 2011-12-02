@@ -1,4 +1,7 @@
 require 'spec_helper'
+require 'redis'
+require 'trebuchet/backend/redis'
+
 
 describe Trebuchet::Backend::Redis do
 
