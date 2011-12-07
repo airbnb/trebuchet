@@ -35,13 +35,28 @@ module TrebuchetHelper
     percent = strategy.percentage
     offset = strategy.offset
     low_id = (0 + offset).to_s.rjust(2, '0')
-    high_id = (percent + offset - 1).to_s.rjust(2, '0')
+    high_id = ((percent + offset - 1) % 100).to_s.rjust(2, '0')
     str = "#{percent}%"
-    unless percent == 0
+    if percent == 0 
+      str << " (no users)"
+    elsif percent == 100
+      str << " (all users)"
+    elsif high_id.to_i < low_id.to_i # wrapped past 100 due to offset
+      str << " (user id ending with #{low_id} to 99 "
+      str << " and 00"
+      str << " to #{high_id}" if high_id != '00'
+      str << ")"
+    else
       str << " (user id ending with #{low_id}" 
       str << " to #{high_id}" if high_id != low_id
       str << ")"
     end
+    str
+  end
+
+  def experiment_strategy(strategy)
+    str = "bucket (#{strategy.bucket.join(', ')}) for experiment: #{strategy.experiment_name}"
+    
     str
   end
   

@@ -42,9 +42,6 @@ class Trebuchet::Feature
   
   def as_json(options = {})
     {:name => @name, :strategy => strategy}
-    # .tap do |h|
-    #       h[:strategy] = strategy if valid?
-    #     end
   end
 
   private

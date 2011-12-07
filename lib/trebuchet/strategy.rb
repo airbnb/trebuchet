@@ -29,7 +29,8 @@ module Trebuchet::Strategy
       [:users, UserId],
       [:default, Default],
       [:custom, Custom],
-      [:multiple, Multiple]
+      [:multiple, Multiple],
+      [:experiment, Experiment]
     ]
   end
   

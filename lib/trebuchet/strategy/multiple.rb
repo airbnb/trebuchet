@@ -8,6 +8,12 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
       @strategies << Trebuchet::Strategy.find(*pair)
     end
   end
+  
+  # override setter so that @feature gets set on @strategies as well
+  def feature=(f)
+    @feature = f
+    @strategies.each {|s| s.feature = f}
+  end
 
   def launch_at?(user)
     !!(strategies.find { |s| s.launch_at?(user) })

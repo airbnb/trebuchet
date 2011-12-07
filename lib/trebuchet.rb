@@ -1,7 +1,5 @@
 class Trebuchet
 
-  VERSION = "0.0.3"
-
   class << self
     attr_accessor :admin_view, :admin_edit
     
@@ -53,6 +51,7 @@ end
 
 
 require 'set'
+require 'trebuchet/version'
 require 'trebuchet/error'
 require 'trebuchet/backend'
 require 'trebuchet/backend/disabled'
@@ -63,6 +62,8 @@ require 'trebuchet/strategy/base'
 require 'trebuchet/strategy/default'
 require 'trebuchet/strategy/percentage'
 require 'trebuchet/strategy/user_id'
+require 'trebuchet/strategy/experiment'
 require 'trebuchet/strategy/custom'
+require 'trebuchet/strategy/invalid'
 require 'trebuchet/strategy/multiple'
 require 'trebuchet/action_controller'

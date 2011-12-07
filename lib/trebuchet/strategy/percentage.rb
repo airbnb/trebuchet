@@ -7,12 +7,7 @@ class Trebuchet::Strategy::Percentage < Trebuchet::Strategy::Base
   end
   
   def offset
-    if feature
-      # arbitrary yet deterministic offset based on feature name to vary the test groups
-      feature.name.hash % 100
-    else
-      0
-    end
+    feature_id % 100
   end
 
   def launch_at?(user)

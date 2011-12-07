@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Trebuchet::Strategy::Percentage do
   
   def offset
-    44 # only works if feature name is 'percentage'
+    99 # only works if feature name is 'percentage'
   end
 
   it "should only launch to a percentage of users" do

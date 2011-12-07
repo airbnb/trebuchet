@@ -1,9 +1,17 @@
+require 'digest/sha1'
+
 class Trebuchet::Strategy::Base
   
   attr_accessor :feature
   
   def name
     self.class.strategy_name
+  end
+  
+  def feature_id
+    Digest::SHA1.hexdigest(@feature.name).to_i(16)
+  rescue
+    return 0
   end
   
   def self.strategy_name
