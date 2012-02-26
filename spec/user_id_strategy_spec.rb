@@ -24,4 +24,10 @@ describe Trebuchet::Strategy::UserId do
     t.launch?('time_machine').should === false
   end
 
+  it "should not break if one id is passed instead of an array" do
+    Trebuchet.feature('time_machine').aim(:users, 1)
+    t = Trebuchet.new User.new(1)
+    t.launch?('time_machine').should === true
+  end
+
 end
