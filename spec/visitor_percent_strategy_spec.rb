@@ -8,6 +8,13 @@ describe Trebuchet::Strategy::VisitorPercent do
     t.launch?('some_feature').should == false
   end
 
+  it "should not require a user" do
+    Trebuchet.visitor_id = 1
+    Trebuchet.aim('some_feature', :visitor_percent, 100)
+    t = Trebuchet.new(nil)
+    t.launch?('some_feature').should == true
+  end
+
   describe 'visitor id integer' do
     before do
       Trebuchet.visitor_id = 123

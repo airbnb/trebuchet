@@ -21,4 +21,8 @@ class Trebuchet::Strategy::VisitorPercent < Trebuchet::Strategy::Base
     (visitor_id + offset) % 100 < percent
   end
 
+  def needs_user?
+    false
+  end
+
 end

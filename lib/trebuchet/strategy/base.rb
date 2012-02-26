@@ -13,7 +13,11 @@ class Trebuchet::Strategy::Base
   rescue
     return 0
   end
-  
+
+  def needs_user?
+    true
+  end
+
   def self.strategy_name
     Trebuchet::Strategy.name_for_class(self)
   end
