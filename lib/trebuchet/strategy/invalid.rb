@@ -12,7 +12,7 @@ class Trebuchet::Strategy::Invalid < Trebuchet::Strategy::Base
     :invalid
   end
 
-  def launch_at?(user)
+  def launch_at?(user, request = nil)
     false
   end
   

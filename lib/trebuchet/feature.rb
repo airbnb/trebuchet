@@ -26,8 +26,8 @@ class Trebuchet::Feature
     strategy.name != :invalid
   end
 
-  def launch_at?(user)
-    !user.nil? && strategy.launch_at?(user)
+  def launch_at?(user, request = nil)
+    !user.nil? && strategy.launch_at?(user, request)
   end
 
   def aim(strategy_name, options = nil)

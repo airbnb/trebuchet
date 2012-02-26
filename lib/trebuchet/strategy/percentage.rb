@@ -10,7 +10,7 @@ class Trebuchet::Strategy::Percentage < Trebuchet::Strategy::Base
     feature_id % 100
   end
 
-  def launch_at?(user)
+  def launch_at?(user, request = nil)
     (user.id + offset) % 100 < percentage
   end
 

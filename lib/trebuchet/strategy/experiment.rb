@@ -11,10 +11,10 @@ class Trebuchet::Strategy::Experiment < Trebuchet::Strategy::Base
     @total_buckets = options[:total_buckets] || 5
   end
 
-  def launch_at?(user)
+  def launch_at?(user, request = nil)
     return false unless self.valid?
     # must hash feature name and user id together to ensure uniform distribution
-    b = Digest::SHA1.hexdigest("experiment: #{@experiment_name} user: #{user.id}")[0,16].to_i(16) % total_buckets
+    b = Digest::SHA1.hexdigest("experiment: #{@experiment_name.downcase} user: #{user.id}").to_i(16) % total_buckets
     !!@bucket.include?(b + 1) # is user in this bucket?
   end
   

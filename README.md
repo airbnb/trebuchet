@@ -76,3 +76,17 @@ Like parameters for builtin strategies, these can be changed while the applicati
     Trebuchet.aim('time_machine', :markets, ['San Francisco', 'New York City'])
 
 When using Trebuchet together with Rails, a good place to define custom strategies is in an initializer.
+
+
+Visitor Strategy
+----------------
+
+Trebuchet can be used to launch to visitors (no user object present).
+First, set the visitor id either directly (in a before filter) or as a proc:
+
+    Trebuchet.visitor_id = 123
+
+    Trebuchet.visitor_id = proc { |request| request && request.cookies[:visitor] && request.cookies[:visitor].hash }
+
+If you're using a proc, Trebuchet passes in the request object. It expects that the proc returns an integer.
+If it returns anything else, Trebuchet will not launch.

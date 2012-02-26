@@ -9,7 +9,7 @@ class Trebuchet::Strategy::Default < Trebuchet::Strategy::Base
     :default
   end
 
-  def launch_at?(user)
+  def launch_at?(user, request = nil)
     false
   end
   

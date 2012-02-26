@@ -10,7 +10,7 @@ class Trebuchet::Strategy::Custom < Trebuchet::Strategy::Base
     @block = @@custom_strategies[name]
   end
 
-  def launch_at?(user)
+  def launch_at?(user, request = nil)
     !!(options ? @block.call(user, options) : @block.call(user))
   end
 

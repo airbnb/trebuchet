@@ -30,7 +30,8 @@ module Trebuchet::Strategy
       [:default, Default],
       [:custom, Custom],
       [:multiple, Multiple],
-      [:experiment, Experiment]
+      [:experiment, Experiment],
+      [:visitor_percent, VisitorPercent]
     ]
   end
   

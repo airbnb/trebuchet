@@ -15,7 +15,7 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
     @strategies.each {|s| s.feature = f}
   end
 
-  def launch_at?(user)
+  def launch_at?(user, request = nil)
     !!(strategies.find { |s| s.launch_at?(user) })
   end
   
