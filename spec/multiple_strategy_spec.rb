@@ -25,4 +25,17 @@ describe Trebuchet::Strategy::Multiple do
     feature.strategy.strategies.last.feature.name.should == feature.name
   end
 
+  it "should pass user and request to each strategy" do
+    args = [:foo, 1]
+    user = mock "User"
+    request = mock "Request"
+    strategy = mock "Strategy"
+
+    Trebuchet::Strategy.should_receive(:find).with(*args).and_return(strategy)
+    strategy.should_receive(:launch_at?).with(user, request)
+
+    multi = Trebuchet::Strategy::Multiple.new(args)
+    multi.launch_at?(user, request)
+  end
+
 end
