@@ -30,14 +30,22 @@ module TrebuchetHelper
     str << (user_ids.empty? ? 'none' : "#{user_ids.join(', ')}")
     str
   end
-  
+
   def percent_strategy(strategy)
+    percent_strategy_string(strategy, 'logged in users')
+  end
+
+  def visitor_percent_strategy(strategy)
+    percent_strategy_string(strategy, 'visitors')
+  end
+
+  def percent_strategy_string(strategy, kind)
     percent = strategy.percentage
     offset = strategy.offset
     low_id = (0 + offset).to_s.rjust(2, '0')
     high_id = ((percent + offset - 1) % 100).to_s.rjust(2, '0')
-    str = "#{percent}%"
-    if percent == 0 
+    str = "#{percent}% of #{kind}"
+    if percent == 0
       str << " (no users)"
     elsif percent == 100
       str << " (all users)"
@@ -47,7 +55,7 @@ module TrebuchetHelper
       str << " to #{high_id}" if high_id != '00'
       str << ")"
     else
-      str << " (user id ending with #{low_id}" 
+      str << " (user id ending with #{low_id}"
       str << " to #{high_id}" if high_id != low_id
       str << ")"
     end
