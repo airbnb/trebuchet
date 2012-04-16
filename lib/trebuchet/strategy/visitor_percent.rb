@@ -1,9 +1,9 @@
 class Trebuchet::Strategy::VisitorPercent < Trebuchet::Strategy::Base
 
-  attr_reader :percent
+  attr_reader :percentage
 
-  def initialize(percent)
-    @percent = percent
+  def initialize(percentage)
+    @percentage = percentage
   end
 
   def offset
@@ -18,7 +18,7 @@ class Trebuchet::Strategy::VisitorPercent < Trebuchet::Strategy::Base
     end
 
     return false if visitor_id.nil?
-    (visitor_id + offset) % 100 < percent
+    (visitor_id + offset) % 100 < percentage
   end
 
   def needs_user?
