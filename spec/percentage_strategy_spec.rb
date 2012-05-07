@@ -6,6 +6,11 @@ describe Trebuchet::Strategy::Percentage do
     99 # only works if feature name is 'percentage'
   end
 
+  it "should not launch to unsaved users, users with no IDs" do
+    Trebuchet.aim('percentage', :percent, 5)
+    should_not_launch('percentage', [nil])
+  end
+
   it "should only launch to a percentage of users" do
     Trebuchet.aim('percentage', :percent, 5)
     should_launch('percentage', [0, 1, 2, 3, 4, 100, 101, 102, 103, 104].map{|i| i - offset})
