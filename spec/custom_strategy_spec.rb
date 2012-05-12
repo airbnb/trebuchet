@@ -15,7 +15,7 @@ describe Trebuchet::Strategy::Custom do
 
   it "should pass arguments to the custom strategy" do
     Trebuchet.define_strategy(:role) do |current_user, role|
-      current_user.has_role?(role)
+      current_user.has_role?(role.to_sym)
     end
 
     Trebuchet.aim('power_feature', :role, :power_user)

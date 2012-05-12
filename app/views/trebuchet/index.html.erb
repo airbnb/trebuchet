@@ -16,4 +16,20 @@
 			<% end %>
 		</tbody>
 	</table>
+	<br />
+	<br />
+	<table class="treb-features">
+		<thead>
+			<tr>
+				<th>Dismantled Features</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @dismantled_features.each do |feature| %>
+				<tr>
+					<td style="text-decoration: line-through"><%= feature.name %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
 </div>

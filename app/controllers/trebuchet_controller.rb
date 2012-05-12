@@ -6,6 +6,9 @@ class TrebuchetController < ApplicationController
     @features = Trebuchet::Feature.all
     @features.sort! {|x,y| x.name.downcase <=> y.name.downcase }
     
+    @dismantled_features = Trebuchet::Feature.dismantled
+    @dismantled_features.sort! {|x,y| x.name.downcase <=> y.name.downcase }
+    
     respond_to do |wants|
       wants.html # index.html.erb
       wants.json { render :json => @features }
