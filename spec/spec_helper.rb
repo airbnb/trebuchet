@@ -9,6 +9,7 @@ require 'bundler'
 require 'trebuchet'
 require 'user'
 
+# Trebuchet.backend = :redis
 
 def should_launch(feature, users)
   should_or_should_not_launch(feature, users, be_true)

@@ -14,6 +14,10 @@ class Trebuchet::Feature
     Trebuchet.backend.get_feature_names.map{|name| new(name)}
   end
   
+  def self.dismantled
+    Trebuchet.backend.get_archived_feature_names.map{|name| new(name)}
+  end
+  
   def self.exist?(name)
     !!all.detect{|feature| feature.name == name }
   end
@@ -38,6 +42,23 @@ class Trebuchet::Feature
     end
     @chained = true
     self
+  end
+  
+  # add/edit just one strategy without affecting other chained strategies
+  def adjust(strategy_name, options = nil)
+    Trebuchet.backend.append_strategy(self.name, strategy_name, options)
+    self
+  end
+  
+  # add to the options of a strategy (if it is an integer, hash or array)
+  def augment(strategy_name, options)
+    # get old args if any
+    # augment them carefully
+    # adjust that strategy
+  end
+  
+  def dismantle
+    Trebuchet.backend.remove_feature(self.name)
   end
   
   def as_json(options = {})

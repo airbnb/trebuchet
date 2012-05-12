@@ -39,7 +39,7 @@ class Trebuchet::Backend::Redis
   end
 
   def set_strategy(feature_name, strategy, options = nil)
-    @redis.del(feature_key(feature_name))
+    remove_strategy(feature_name)
     append_strategy(feature_name, strategy, options)
   end
 
@@ -48,11 +48,29 @@ class Trebuchet::Backend::Redis
     @redis.sadd(feature_names_key, feature_name)
   end
   
+  def remove_strategy(feature_name)
+    @redis.del(feature_key(feature_name))
+  end
+  
   def get_feature_names
     @redis.smembers(feature_names_key)
   end
+  
+  def get_archived_feature_names
+    @redis.smembers(archived_feature_names_key)
+  end
+  
+  def remove_feature(feature_name)
+    @redis.del(feature_key(feature_name))
+    @redis.srem(feature_names_key, feature_name)
+    @redis.sadd(archived_feature_names_key, feature_name)
+  end
 
   private
+  
+  def archived_feature_names_key
+    "#{namespace}archived-feature-names"
+  end
   
   def feature_names_key
     "#{namespace}feature-names"
