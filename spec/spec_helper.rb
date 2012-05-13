@@ -9,6 +9,7 @@ require 'bundler'
 require 'trebuchet'
 require 'user'
 
+# uncomment to run specs against Redis backend instead of Memory backend
 # Trebuchet.backend = :redis
 
 def should_launch(feature, users)
