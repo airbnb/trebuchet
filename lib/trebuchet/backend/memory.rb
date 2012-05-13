@@ -6,7 +6,7 @@ class Trebuchet::Backend::Memory
   end
 
   def get_strategy(feature_name)
-    @hash.fetch(feature_name, nil)
+    @hash.fetch(feature_name, nil) || []
   end
 
   def set_strategy(feature, strategy, options = nil)
@@ -33,7 +33,7 @@ class Trebuchet::Backend::Memory
   
   def remove_feature(feature)
     @hash.delete(feature)
-    @archived += feature
+    @archived << feature
   end
   
   def get_archived_feature_names

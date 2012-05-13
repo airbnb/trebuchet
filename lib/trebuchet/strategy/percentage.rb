@@ -3,7 +3,7 @@ class Trebuchet::Strategy::Percentage < Trebuchet::Strategy::Base
   attr_reader :percentage
 
   def initialize(percentage)
-    @percentage = percentage
+    @percentage = percentage.to_i
   end
   
   def offset

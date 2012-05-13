@@ -51,10 +51,25 @@ class Trebuchet::Feature
   end
   
   # add to the options of a strategy (if it is an integer, hash or array)
-  def augment(strategy_name, options)
-    # get old args if any
+  def augment(strategy_name, new_options)
+    # get old options if any
+    strategy_array = Trebuchet.backend.get_strategy(self.name)
+    i = strategy_array.index(strategy_name)
+    old_options = i ? strategy_array[i+1] : nil
     # augment them carefully
+    options = if old_options == nil
+      new_options
+    elsif old_options.is_a?(Array) && new_options.is_a?(Array)
+      old_options + new_options
+    elsif old_options.is_a?(Hash) && new_options.is_a?(Hash)
+      old_options.merge(new_options)
+    elsif old_options.is_a?(Numeric) && new_options.is_a?(Numeric)
+      old_options + new_options
+    else # otherwise, change nothing
+      old_options
+    end
     # adjust that strategy
+    self.adjust(strategy_name, options)
   end
   
   def dismantle
