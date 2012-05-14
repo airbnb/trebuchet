@@ -16,5 +16,11 @@ describe Trebuchet::Strategy::Default do
     t = Trebuchet.new User.new(1)
     t.launch?('time_machine').should === false
   end
+  
+  it "should return false when missing user" do
+    Trebuchet.feature('time_machine').aim(:default)
+    t = Trebuchet.new nil
+    t.launch?('time_machine').should === false
+  end
 
 end
