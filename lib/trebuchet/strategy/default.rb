@@ -13,4 +13,8 @@ class Trebuchet::Strategy::Default < Trebuchet::Strategy::Base
     false
   end
   
+  def needs_user?
+    false
+  end
+  
 end

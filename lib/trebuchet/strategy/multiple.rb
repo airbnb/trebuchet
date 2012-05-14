@@ -22,5 +22,9 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
   def as_json(options = {})
     @strategies
   end
+  
+  def needs_user?
+    false
+  end
 
 end
