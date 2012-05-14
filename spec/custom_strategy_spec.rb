@@ -23,5 +23,12 @@ describe Trebuchet::Strategy::Custom do
     Trebuchet.new(User.new(1, :power_user)).launch?('power_feature').should be_true
     Trebuchet.new(User.new(1, :user)).launch?('power_feature').should be_false
   end
+  
+  it "should allow an always-on strategy" do
+    Trebuchet.define_strategy(:yes) { |user| true }
+    Trebuchet.aim("perma-feature", :yes)
+    Trebuchet.new(User.new 999).launch?("perma-feature").should be_true
+    Trebuchet.new(User.new nil).launch?("perma-feature").should be_true
+  end
 
 end
