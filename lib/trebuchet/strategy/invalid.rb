@@ -16,4 +16,8 @@ class Trebuchet::Strategy::Invalid < Trebuchet::Strategy::Base
     false
   end
   
+  def needs_user?
+    false
+  end
+  
 end
