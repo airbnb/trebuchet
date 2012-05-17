@@ -30,5 +30,17 @@ describe Trebuchet::Strategy::Custom do
     Trebuchet.new(User.new 999).launch?("perma-feature").should be_true
     Trebuchet.new(User.new nil).launch?("perma-feature").should be_true
   end
+  
+  it "should needs_user? based on block arity" do
+    # still a good idea to nilcheck within block however
+    Trebuchet.define_strategy(:yes) { |user| true }
+    Trebuchet.define_strategy(:heck_yeah) { |user, request| true }
+    Trebuchet.define_strategy(:never) { false }
+    Trebuchet.define_strategy(:always) { true }
+    Trebuchet::Strategy::Custom.new(:yes).needs_user?.should be_true
+    Trebuchet::Strategy::Custom.new(:heck_yeah).needs_user?.should be_true
+    Trebuchet::Strategy::Custom.new(:never).needs_user?.should be_false
+    Trebuchet::Strategy::Custom.new(:always).needs_user?.should be_false
+  end
 
 end

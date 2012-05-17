@@ -23,7 +23,11 @@ class Trebuchet::Strategy::Custom < Trebuchet::Strategy::Base
   end
   
   def needs_user?
-    false
+    if block = @@custom_strategies[custom_name]
+      block.arity > 0
+    else
+      false
+    end
   end
 
 end
