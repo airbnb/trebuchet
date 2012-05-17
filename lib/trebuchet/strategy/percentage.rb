@@ -11,11 +11,11 @@ class Trebuchet::Strategy::Percentage < Trebuchet::Strategy::Base
   end
 
   def launch_at?(user, request = nil)
-    if user.id.nil?
+    if user.nil? || user.id.nil? # catch unsaved user
       false
     else
       (user.id + offset) % 100 < percentage
     end
   end
-
+  
 end

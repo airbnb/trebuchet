@@ -8,7 +8,8 @@ describe Trebuchet::Strategy::Percentage do
 
   it "should not launch to unsaved users, users with no IDs" do
     Trebuchet.aim('percentage', :percent, 5)
-    should_not_launch('percentage', [nil])
+    Trebuchet.new(nil).launch?('percentage').should be_false
+    Trebuchet.new(User.new(nil)).launch?('percentage').should be_false
   end
 
   it "should only launch to a percentage of users" do

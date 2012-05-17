@@ -37,5 +37,12 @@ describe Trebuchet::Strategy::Multiple do
     multi = Trebuchet::Strategy::Multiple.new(args)
     multi.launch_at?(user, request)
   end
+  
+  it "should needs_user? if any strategies need_user?" do
+    s = Trebuchet::Strategy::Multiple.new [:default, nil, :invalid, nil]
+    s.needs_user?.should be_false
+    s = Trebuchet::Strategy::Multiple.new [:default, nil, :percent, 5]
+    s.needs_user?.should be_true
+  end
 
 end

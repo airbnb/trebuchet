@@ -24,10 +24,19 @@ describe Trebuchet::Strategy::UserId do
     t.launch?('time_machine').should === false
   end
 
+  # this behavior should be deprecated -- causes problems with augment
   it "should not break if one id is passed instead of an array" do
     Trebuchet.feature('time_machine').aim(:users, 1)
     t = Trebuchet.new User.new(1)
     t.launch?('time_machine').should === true
+  end
+  
+  it "should not break on missing user" do
+    Trebuchet.feature("the chosen ones").aim(:users, [1,2,3])
+    t = Trebuchet.new User.new(nil)
+    t.launch?("the chosen ones").should be_false
+    t = Trebuchet.new nil
+    t.launch?("the chosen ones").should be_false
   end
 
 end

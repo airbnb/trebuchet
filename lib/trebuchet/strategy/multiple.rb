@@ -24,7 +24,7 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
   end
   
   def needs_user?
-    false
+    strategies.any? { |s| s.needs_user? }
   end
 
 end
