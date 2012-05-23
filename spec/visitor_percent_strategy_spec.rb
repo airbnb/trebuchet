@@ -7,11 +7,18 @@ describe Trebuchet::Strategy::VisitorPercent do
     t = Trebuchet.new(User.new(0))
     t.launch?('some_feature').should == false
   end
+  
+  it "should require a request" do
+    Trebuchet.visitor_id = 1
+    Trebuchet.aim('some_feature', :visitor_percent, 100)
+    t = Trebuchet.new(User.new(1), nil)
+    t.launch?('some_feature').should == false
+  end
 
   it "should not require a user" do
     Trebuchet.visitor_id = 1
     Trebuchet.aim('some_feature', :visitor_percent, 100)
-    t = Trebuchet.new(nil)
+    t = Trebuchet.new(nil, mock_request('12345'))
     t.launch?('some_feature').should == true
   end
 
@@ -23,7 +30,7 @@ describe Trebuchet::Strategy::VisitorPercent do
     it 'should launch' do
       # offset of some_feature is 33
       Trebuchet.aim('some_feature', :visitor_percent, 100)
-      t = Trebuchet.new(User.new(0))
+      t = Trebuchet.new(User.new(0), mock_request('12345'))
       t.launch?('some_feature').should == true
 
       Trebuchet.aim('some_feature', :visitor_percent, 57)
