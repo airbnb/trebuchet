@@ -31,7 +31,8 @@ module Trebuchet::Strategy
       [:custom, Custom],
       [:multiple, Multiple],
       [:experiment, Experiment],
-      [:visitor_percent, VisitorPercent]
+      [:visitor_percent, VisitorPercent],
+      [:hostname, Hostname]
     ]
   end
   
