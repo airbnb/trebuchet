@@ -24,7 +24,9 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
   end
   
   def needs_user?
-    strategies.any? { |s| s.needs_user? }
+    false # assume some of the strategies may not need user
+    # could change this so it calls only the strategies that don't need a user when none is present
+    # strategies.any? { |s| s.needs_user? }
   end
 
 end
