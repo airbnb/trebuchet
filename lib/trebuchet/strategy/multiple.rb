@@ -16,7 +16,8 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
   end
 
   def launch_at?(user, request = nil)
-    !!(strategies.find { |s| s.launch_at?(user, request) })
+    !!(strategies.select{|s| !user.nil? || !s.needs_user?}.find { |s| s.launch_at?(user, request) })
+    # !!(strategies.find { |s| s.launch_at?(user, request) })
   end
   
   def as_json(options = {})

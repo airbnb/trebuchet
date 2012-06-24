@@ -38,11 +38,18 @@ describe Trebuchet::Strategy::Multiple do
     multi.launch_at?(user, request)
   end
   
-  it "should needs_user? if any strategies need_user?" do
+  it "should always return false for needs_user?" do
     s = Trebuchet::Strategy::Multiple.new [:default, nil, :invalid, nil]
     s.needs_user?.should be_false
     s = Trebuchet::Strategy::Multiple.new [:default, nil, :percent, 5]
-    s.needs_user?.should be_true
+    s.needs_user?.should be_false
+  end
+
+  it "should skip needs_user? sub-strategies if user not present" do
+    s = Trebuchet::Strategy::Multiple.new [:hostname, 'abc', :users, [1,2,3]]
+    s.strategies.first.should_receive(:launch_at?)
+    s.strategies.last.should_not_receive(:launch_at?)
+    s.launch_at?(nil)
   end
 
 end
