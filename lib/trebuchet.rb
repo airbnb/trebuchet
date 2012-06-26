@@ -56,11 +56,13 @@ class Trebuchet
   end
 
   def launch(feature, &block)
-    yield if launch?(feature)
+    if launch?(feature)
+      yield if block_given?
+    end
   end
 
   def launch?(feature)
-    Feature.find(feature).launch_at?(@current_user, @request)
+    !!Feature.find(feature).launch_at?(@current_user, @request)
   end
 
 end
