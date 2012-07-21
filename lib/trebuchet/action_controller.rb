@@ -5,6 +5,7 @@ module Trebuchet::ActionController
   end
 
   def trebuchet
+    Trebuchet.initialize_logs
     @trebuchet ||= Trebuchet.new(current_user, request)
   end
 
