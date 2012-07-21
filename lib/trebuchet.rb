@@ -16,7 +16,21 @@ class Trebuchet
     end
     
     # this only works with additional args, e.g.: Trebuchet.backend = :memory
-    alias_method :backend=, :set_backend 
+    alias_method :backend=, :set_backend
+    
+    # Logging done at class level
+    # TODO: split by user identifier so instance can return scoped to one user
+    # (in case multiple users have user.trebuchet called)
+    def initialize_logs
+      @logs = {}
+    end
+    
+    def log(feature_name, result)
+      initialize_logs if @logs == nil
+      @logs[feature_name] = result
+    end
+
+    attr_reader :logs
     
   end
 
@@ -53,6 +67,7 @@ class Trebuchet
   def initialize(current_user, request = nil)
     @current_user = current_user
     @request = request
+    @logs = {}
   end
 
   def launch(feature, &block)
@@ -62,7 +77,9 @@ class Trebuchet
   end
 
   def launch?(feature)
-    !!Feature.find(feature).launch_at?(@current_user, @request)
+    result = !!Feature.find(feature).launch_at?(@current_user, @request)
+    Trebuchet.log(feature, result)
+    return result
   end
 
 end
