@@ -1,13 +1,12 @@
 class Trebuchet::Strategy::VisitorPercent < Trebuchet::Strategy::Base
 
-  attr_reader :percentage
+  include Trebuchet::Strategy::Percentable
 
-  def initialize(percentage)
-    @percentage = percentage
-  end
-
-  def offset
-    feature_id % 100
+  def initialize(options)
+    set_range_from_options(options)
+    if @legacy = options.is_a?(Numeric)  # TODO: remove once fully tested
+      @percentage = options.to_i
+    end
   end
 
   def launch_at?(user, request = nil)
@@ -17,9 +16,10 @@ class Trebuchet::Strategy::VisitorPercent < Trebuchet::Strategy::Base
     else
       visitor_id = nil
     end
-
     return false if visitor_id.nil?
-    (visitor_id + offset) % 100 < percentage
+    
+    return !!((visitor_id + offset) % 100 < @percentage) if @legacy  # TODO: remove once fully tested
+    value_in_range?(visitor_id.to_i)
   end
 
   def needs_user?
