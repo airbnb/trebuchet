@@ -25,7 +25,7 @@ module Trebuchet::Strategy
   
   def self.name_class_map
     [
-      [:percent, Percentage],
+      [:percent, Percent],
       [:users, UserId],
       [:default, Default],
       [:custom, Custom],
@@ -45,5 +45,60 @@ module Trebuchet::Strategy
     names = Hash[name_class_map.map(&:reverse)]
     names[klass]
   end
+  
+  
+  ### Percentable module standardizes logic for percentage-based strategies
+  
+  module Percentable
+    
+    def initialize(options)
+      set_range_from_options(options)
+    end
+    
+    # must be called from initialize
+    def set_range_from_options(options)
+      if options == nil || options.is_a?(Numeric)
+        @from = 0
+        @to = options.to_i - 1
+        @style = :percentage
+      elsif options.is_a?(Hash) && (p = options['percentage'] || options[:percentage])
+        @from = 0
+        @to = p.to_i - 1
+        @style = :percentage
+      elsif options.is_a?(Hash)
+        @from = options['from'] || options[:from]
+        @to = options['to'] || options[:to]
+        @style = :range
+      else
+        @from = 0
+        @to = -1
+      end
+    end
+
+    def offset
+      if @style == :percentage
+        feature_id % 100
+      else
+        0
+      end
+    end
+
+    def percentage
+      return 0 unless @to.is_a?(Integer) && @from.is_a?(Integer)
+      ((@to - @from) + 100) % 100 + 1
+    end
+
+    # call from launch_at? and pass in user id or another integer
+    def value_in_range?(value)
+      return false unless @from && @to
+      return false if @from.to_i < 0 || @to.to_i < 0
+      return false if value == nil || !value.is_a?(Numeric)
+      cutoff = percentage
+      value = ((value - @from) + 200 - offset) % 100
+      !!(value < cutoff)
+    end
+    
+  end
+
 
 end

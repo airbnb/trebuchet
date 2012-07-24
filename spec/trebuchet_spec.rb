@@ -1,19 +1,21 @@
 require 'spec_helper'
 
 describe Trebuchet do
-
+  
   describe "launch?" do
+    
     it "should call launch_at? on feature" do
       Trebuchet::Feature.any_instance.should_receive(:launch_at?).once
       Trebuchet.new(User.new(1)).launch?('highly_experimental')
     end
-    
+  
     it "should  call launch_at? on feature even if missing user" do
       Trebuchet::Feature.any_instance.should_receive(:launch_at?).once
-      Trebuchet.new(nil).launch?('highly_experimental')      
+      Trebuchet.new(nil).launch?('highly_experimental')
     end
+    
   end
-  
+    
   describe "launch" do
     it "should execute a block" do
       times = 0
