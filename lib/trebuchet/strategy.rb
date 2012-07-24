@@ -46,7 +46,7 @@ module Trebuchet::Strategy
     names[klass]
   end
   
-  
+    
   ### Percentable module standardizes logic for percentage-based strategies
   
   module Percentable
@@ -99,6 +99,5 @@ module Trebuchet::Strategy
     end
     
   end
-
 
 end
