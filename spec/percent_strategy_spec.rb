@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Trebuchet::Strategy::Percentage do
+describe Trebuchet::Strategy::Percent do
   
   def offset
     99 # only works if feature name is 'percentage'
