@@ -72,6 +72,46 @@ describe Trebuchet::Strategy::VisitorPercent do
       t.launch?('some_feature').should == false
     end
   end
+  
+  describe 'percentable' do
+    
+    before do
+      @feature = Trebuchet.feature("liberty")
+      @trebuchet = Trebuchet.new(User.new(0), mock_request('abcdef'))
+    end
+    
+    it "should use from and to" do
+      @feature.aim(:visitor_percent, :from => 5, :to => 10)
+      Trebuchet.feature("liberty").strategy.offset.should == 0
+      Trebuchet.visitor_id = 10
+      @trebuchet.launch?("liberty").should == true
+      Trebuchet.visitor_id = 5
+      @trebuchet.launch?("liberty").should == true
+      Trebuchet.visitor_id = 4
+      @trebuchet.launch?("liberty").should == false
+      Trebuchet.visitor_id = 11
+      @trebuchet.launch?("liberty").should == false
+    end
+    
+    it "should use a percentage" do
+      @feature.aim(:visitor_percent, :percentage => 25)
+      offset = @feature.strategy.offset
+      offset.should == 90
+      Trebuchet.visitor_id = 24 + offset
+      @trebuchet.launch?("liberty").should == true
+      Trebuchet.visitor_id = 0 + offset
+      @trebuchet.launch?("liberty").should == true
+      Trebuchet.visitor_id = 5 + offset
+      @trebuchet.launch?("liberty").should == true
+      Trebuchet.visitor_id = 25 + offset
+      @trebuchet.launch?("liberty").should == false
+    end
+    
+    it "should use legacy" do # remove when deprecating legacy percent mode
+      @feature.aim(:visitor_percent, 13)
+      @feature.strategy.instance_variable_get(:@legacy).should == true
+    end
+  end
 
   def mock_request(cookie = nil)
     mock 'Request', :cookies => {:visitor => cookie}
