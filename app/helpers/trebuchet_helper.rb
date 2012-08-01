@@ -63,7 +63,7 @@ module TrebuchetHelper
   end
 
   def experiment_strategy(strategy)
-    str = "bucket (#{strategy.bucket.join(', ')}) for experiment: #{strategy.experiment_name}"
+    str = "bucket (#{strategy.bucket.join(', ')}) of total: #{strategy.total_buckets} for experiment: #{strategy.experiment_name}"
     
     str
   end
