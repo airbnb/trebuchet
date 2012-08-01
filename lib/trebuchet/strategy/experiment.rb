@@ -5,7 +5,7 @@ class Trebuchet::Strategy::Experiment < Trebuchet::Strategy::Base
   attr_reader :bucket, :total_buckets, :experiment_name
 
   def initialize(options = {})
-    options.keys.each {|k| options[k.to_s] = options.delete(k)} # cheap stringify_keys
+    options.keys.each {|k| options[k.to_sym] = options.delete(k)} # cheap symbolize_keys
     @experiment_name = options[:name]
     @bucket = [ options[:bucket] ].flatten # always treat as an array
     @total_buckets = options[:total_buckets] || 5
