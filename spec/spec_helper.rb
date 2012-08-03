@@ -26,3 +26,7 @@ def should_or_should_not_launch(feature, users, be_true_or_false)
     Trebuchet.new(user).launch?(feature).should be_true_or_false
   end
 end
+
+def mock_request(cookie = nil)
+  mock 'Request', :cookies => {:visitor => cookie}
+end

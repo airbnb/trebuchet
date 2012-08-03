@@ -113,8 +113,4 @@ describe Trebuchet::Strategy::VisitorPercent do
     end
   end
 
-  def mock_request(cookie = nil)
-    mock 'Request', :cookies => {:visitor => cookie}
-  end
-
 end

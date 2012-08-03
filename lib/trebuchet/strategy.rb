@@ -1,3 +1,5 @@
+require 'digest/sha1'
+
 module Trebuchet::Strategy
 
   def self.for_feature(feature)
@@ -32,7 +34,8 @@ module Trebuchet::Strategy
       [:multiple, Multiple],
       [:experiment, Experiment],
       [:visitor_percent, VisitorPercent],
-      [:hostname, Hostname]
+      [:hostname, Hostname],
+      [:visitor_experiment, VisitorExperiment]
     ]
   end
   
@@ -96,6 +99,37 @@ module Trebuchet::Strategy
       cutoff = percentage
       value = ((value - @from) + 200 - offset) % 100
       !!(value < cutoff)
+    end
+    
+  end
+  
+  module Experimentable
+    
+    attr_reader :bucket, :total_buckets, :experiment_name
+    
+    def initialize_experiment(options)
+      options.keys.each {|k| options[k.to_sym] = options.delete(k)} # cheap symbolize_keys
+      @experiment_name = options[:name]
+      @bucket = [ options[:bucket] ].flatten # always treat as an array
+      @total_buckets = options[:total_buckets] || 5
+    end
+    
+    def value_in_bucket?(value)
+      return false if value == nil || !value.is_a?(Numeric)
+      return false unless self.valid?
+      # must hash feature name and value together to ensure uniform distribution
+      b = Digest::SHA1.hexdigest("experiment: #{@experiment_name.downcase} user: #{value}").to_i(16) % total_buckets
+      !!@bucket.include?(b + 1) # is user in this bucket?
+    end
+    
+    def valid?
+      experiment_name && total_buckets > 0 && bucket.max <= total_buckets && (1..total_buckets).include?(bucket.min)
+    rescue
+      false
+    end
+
+    def as_json
+      {:name => experiment_name, :bucket => bucket, :total_buckets => total_buckets}
     end
     
   end
