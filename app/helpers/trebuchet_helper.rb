@@ -68,6 +68,10 @@ module TrebuchetHelper
     str
   end
   
+  def visitor_experiment_strategy(strategy)
+    "bucket (#{strategy.bucket.join(', ')}) of total: #{strategy.total_buckets} for visitor experiment: #{strategy.experiment_name}"
+  end
+  
   def multiple_strategy(strategy)
     strategy.strategies.map do |s|
       strategy s
