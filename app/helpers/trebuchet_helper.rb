@@ -40,27 +40,46 @@ module TrebuchetHelper
   end
 
   def percent_strategy_string(strategy, kind)
-    percent = strategy.percentage
-    offset = strategy.offset
-    low_id = (0 + offset).to_s.rjust(2, '0')
-    high_id = ((percent + offset - 1) % 100).to_s.rjust(2, '0')
-    str = "#{percent}% of #{kind}"
-    if percent == 0
-      str << " (no users)"
-    elsif percent == 100
-      str << " (all users)"
-    elsif high_id.to_i < low_id.to_i # wrapped past 100 due to offset
-      str << " (user id ending with #{low_id} to 99 "
-      str << " and 00"
-      str << " to #{high_id}" if high_id != '00'
-      str << ")"
-    else
-      str << " (user id ending with #{low_id}"
-      str << " to #{high_id}" if high_id != low_id
-      str << ")"
+    str = "#{strategy.percentage}% of #{kind} "
+    if !strategy.instance_variable_get(:@legacy)
+      from = strategy.instance_variable_get(:@from)
+      to = strategy.instance_variable_get(:@to)
+      if to < 0
+        str << " (no users)"        
+      else
+        str << "("
+        str << "user id ending with " if kind != 'visitors'
+        str << "#{from.to_s.rjust(2, '0')}"
+        str << " to #{to.to_s.rjust(2, '0')}" if to != from
+        str << ")"
+      end
     end
     str
   end
+
+  # deprecated
+  # def old_percent_strategy_string(strategy, kind)
+  #   percent = strategy.percentage
+  #   offset = strategy.offset
+  #   low_id = (0 + offset).to_s.rjust(2, '0')
+  #   high_id = ((percent + offset - 1) % 100).to_s.rjust(2, '0')
+  #   str = "#{percent}% of #{kind}"
+  #   if percent == 0
+  #     str << " (no users)"
+  #   elsif percent == 100
+  #     str << " (all users)"
+  #   elsif high_id.to_i < low_id.to_i # wrapped past 100 due to offset
+  #     str << " (user id ending with #{low_id} to 99 "
+  #     str << " and 00"
+  #     str << " to #{high_id}" if high_id != '00'
+  #     str << ")"
+  #   else
+  #     str << " (user id ending with #{low_id}"
+  #     str << " to #{high_id}" if high_id != low_id
+  #     str << ")"
+  #   end
+  #   str
+  # end
 
   def experiment_strategy(strategy)
     str = "bucket (#{strategy.bucket.join(', ')}) of total: #{strategy.total_buckets} for experiment: #{strategy.experiment_name}"
