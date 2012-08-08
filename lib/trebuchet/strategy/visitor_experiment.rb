@@ -1,6 +1,6 @@
 class Trebuchet::Strategy::VisitorExperiment < Trebuchet::Strategy::Base
-  
-  include Trebuchet::Strategy::Experimentable  
+
+  include Trebuchet::Strategy::Experimentable
 
   def initialize(options = {})
     initialize_experiment(options)
@@ -14,6 +14,10 @@ class Trebuchet::Strategy::VisitorExperiment < Trebuchet::Strategy::Base
     end
     return false if visitor_id.nil?
     value_in_bucket?(visitor_id)
+  end
+
+  def needs_user?
+    false
   end
 
 end
