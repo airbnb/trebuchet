@@ -88,6 +88,7 @@ module Trebuchet::Strategy
 
     def percentage
       return 0 unless @to.is_a?(Integer) && @from.is_a?(Integer)
+      return 0 if @to < 0
       ((@to - @from) + 100) % 100 + 1
     end
 
