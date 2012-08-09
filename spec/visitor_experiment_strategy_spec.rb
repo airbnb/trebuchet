@@ -1,9 +1,10 @@
 require 'spec_helper'
 
-describe Trebuchet::Strategy::Experiment do
+describe Trebuchet::Strategy::VisitorExperiment do
   
   before do
     @feature_name = "Infrared Vision"
+    @feature_name2 = "Alligator Tail"
     @experiment_name = "Superhumanity"
     @trebuchet = Trebuchet.new(User.new(0), mock_request('abcdef'))
   end
@@ -23,6 +24,14 @@ describe Trebuchet::Strategy::Experiment do
       Trebuchet.visitor_id = i
       @trebuchet.launch?(@feature_name).should be_false
     end
+  end
+  
+  it "should launch nil request to no bucket" do
+    Trebuchet.aim(@feature_name, :visitor_experiment, :name => @experiment_name, :total_buckets => 2, :bucket => 1)
+    Trebuchet.aim(@feature_name2, :visitor_experiment, :name => @experiment_name, :total_buckets => 2, :bucket => 2)
+    Trebuchet.visitor_id = nil
+    @trebuchet.launch?(@feature_name).should be_false
+    @trebuchet.launch?(@feature_name2).should be_false
   end
   
 
