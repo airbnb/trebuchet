@@ -9,15 +9,27 @@
 		</thead>
 		<tbody>
 			<% @features.each do |feature| %>
+				<% has_history = feature.history.length > 0 %>
 				<tr>
 					<td><%= feature.name %></td>
 					<td><%= strategy feature.strategy %></td>
-					<td>
-  					<% feature.history.each do |row| %>
-  					  at <%= row.first %> 'twas <%= strategy row.last %> <br />
-  					<% end %>
-  				</td>
+					<% if has_history %>
+						<td>
+							<a class="history-toggle" href="#">History</a>
+						</td>
+					<% end %>
 				</tr>
+				<% if has_history %>
+				<tr>
+					<td class="unstyled collapsed treb-features-history-wrapper" colspan="2">
+						<table class="treb-features treb-features-history well">
+							<% feature.history.each do |row| %>
+							<tr><td>at <%= row.first %> 'twas <%= strategy row.last %></td></tr>
+							<% end %>
+						</table>
+					</td>
+				</tr>
+				<% end %>
 			<% end %>
 		</tbody>
 	</table>
@@ -38,3 +50,17 @@
 		</tbody>
 	</table>
 </div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script>
+	(function(undefined) {
+		var trebFeatures = $('.treb-features');
+		trebFeatures.on('click', '.history-toggle', function(e) {
+			var $target = $(e.target);
+
+			$target.parents('tbody').
+				find('.treb-features-history-wrapper').toggleClass('collapsed');
+			e.preventDefault();
+		});
+	})();
+</script>
