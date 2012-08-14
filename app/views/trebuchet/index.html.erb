@@ -12,6 +12,11 @@
 				<tr>
 					<td><%= feature.name %></td>
 					<td><%= strategy feature.strategy %></td>
+					<td>
+  					<% feature.history.each do |row| %>
+  					  at <%= row.first %> 'twas <%= strategy row.last %> <br />
+  					<% end %>
+  				</td>
 				</tr>
 			<% end %>
 		</tbody>

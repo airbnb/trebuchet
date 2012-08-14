@@ -76,6 +76,13 @@ class Trebuchet::Feature
     Trebuchet.backend.remove_feature(self.name)
   end
   
+  def history
+    return [] unless Trebuchet.backend.respond_to?(:get_history)
+    Trebuchet.backend.get_history(self.name).map do |row|
+      [Time.at(row.first), Trebuchet::Strategy.find(*row.last)]
+    end
+  end
+  
   def as_json(options = {})
     {:name => @name, :strategy => strategy}
   end

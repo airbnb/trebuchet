@@ -23,9 +23,13 @@ class Trebuchet::Backend::Redis
 
   def get_strategy(feature_name)
     return nil unless h = @redis.hgetall(feature_key(feature_name))
-    return nil unless h.is_a?(Hash)
+    unpack_strategy(h)
+  end
+  
+  def unpack_strategy(options)
+    return nil unless options.is_a?(Hash)
     [].tap do |a|
-      h.each do |k, v|
+      options.each do |k, v|
         begin
           key = k.to_sym
           value = JSON.load(v).first # unpack from array
@@ -46,6 +50,7 @@ class Trebuchet::Backend::Redis
   def append_strategy(feature_name, strategy, options = nil)
     @redis.hset(feature_key(feature_name), strategy, [options].to_json) # have to put options in container for json
     @redis.sadd(feature_names_key, feature_name)
+    store_history(feature_name)
   end
   
   def remove_strategy(feature_name)
@@ -65,6 +70,22 @@ class Trebuchet::Backend::Redis
     @redis.srem(feature_names_key, feature_name)
     @redis.sadd(archived_feature_names_key, feature_name)
   end
+  
+  def store_history(feature_name)
+    timestamp = Time.now.to_i
+    h = @redis.hgetall(feature_key(feature_name))
+    @redis.hmset(feature_history_key(feature_name, timestamp), *h.to_a.flatten)
+    @redis.sadd(feature_history_key(feature_name), timestamp) # subtle
+  end
+  
+  def get_history(feature_name)
+    [].tap do |history|
+      @redis.smembers(feature_history_key(feature_name)).sort.each do |timestamp|
+        h = @redis.hgetall(feature_history_key(feature_name, timestamp))
+        history << [timestamp.to_i, unpack_strategy(h)]
+      end
+    end
+  end
 
   private
   
@@ -78,6 +99,12 @@ class Trebuchet::Backend::Redis
   
   def feature_key(feature_name)
     "#{namespace}features/#{feature_name}"
+  end
+  
+  def feature_history_key(feature_name, timestamp = nil)
+    key = "#{namespace}feature-history/#{feature_name}"
+    key = "#{key}/#{timestamp}" if timestamp
+    key
   end
 
 end
