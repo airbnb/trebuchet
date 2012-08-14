@@ -5,11 +5,12 @@
 			<tr>
 				<th>Feature Name</th>
 				<th>Launch Strategy</th>
+				<th>Strategy History</th>
 			</tr>
 		</thead>
 		<tbody>
 			<% @features.each do |feature| %>
-				<% has_history = feature.history.length > 0 %>
+				<%- has_history = feature.history.length > 0 %>
 				<tr>
 					<td><%= feature.name %></td>
 					<td><%= strategy feature.strategy %></td>
@@ -23,8 +24,8 @@
 				<tr>
 					<td class="unstyled collapsed treb-features-history-wrapper" colspan="2">
 						<table class="treb-features treb-features-history well">
-							<% feature.history.each do |row| %>
-							<tr><td>at <%= row.first %> 'twas <%= strategy row.last %></td></tr>
+							<% feature.history.each do |time, strategy| %>
+							  <tr><td><%= time.strftime("%x %X") %><br /><%= strategy strategy %></td></tr>
 							<% end %>
 						</table>
 					</td>
@@ -39,13 +40,31 @@
 		<thead>
 			<tr>
 				<th>Dismantled Features</th>
+				<th>Strategy History</th>
 			</tr>
 		</thead>
 		<tbody>
 			<% @dismantled_features.each do |feature| %>
+			  <%- has_history = feature.history.length > 0 %>
 				<tr>
 					<td style="text-decoration: line-through"><%= feature.name %></td>
+					<% if has_history %>
+						<td>
+							<a class="history-toggle" href="#">History</a>
+						</td>
+					<% end %>
 				</tr>
+				<% if has_history %>
+				<tr>
+					<td class="unstyled collapsed treb-features-history-wrapper" colspan="1">
+						<table class="treb-features treb-features-history well">
+							<% feature.history.each do |time, strategy| %>
+							  <tr><td><%= time.strftime("%x %X") %><br /><%= strategy strategy %></td></tr>
+							<% end %>
+						</table>
+					</td>
+				</tr>
+				<% end %>
 			<% end %>
 		</tbody>
 	</table>
