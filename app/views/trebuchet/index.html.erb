@@ -77,7 +77,7 @@
 		trebFeatures.on('click', '.history-toggle', function(e) {
 			var $target = $(e.target);
 
-			$target.parents('tbody').
+			$target.parents('tr').next().
 				find('.treb-features-history-wrapper').toggleClass('collapsed');
 			e.preventDefault();
 		});
