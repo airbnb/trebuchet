@@ -31,6 +31,12 @@ class Trebuchet
     end
 
     attr_reader :logs
+    attr_accessor :current
+
+    def current
+      @current = @current.call if @current.is_a?(Proc)
+      @current
+    end
     
   end
 
