@@ -23,7 +23,12 @@ class Trebuchet::Backend::RedisCached < Trebuchet::Backend::Redis
     @cached_strategies ||= Hash.new
   end
 
+  def cache_cleared_at
+    @cache_cleared_at ||= Time.now
+  end
+
   def clear_cached_strategies
+    @cache_cleared_at = Time.now
     @cached_strategies = nil
   end
 
