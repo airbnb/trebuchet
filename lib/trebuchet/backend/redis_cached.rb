@@ -6,8 +6,8 @@ class Trebuchet::Backend::RedisCached < Trebuchet::Backend::Redis
     if cached_strategies.has_key?(feature_name)
       # use cached if available (even if value is nil)
       cached_strategies[feature_name]
-    else 
-      # or call Trebuchet::Backend::Redis#get_strategy 
+    else
+      # or call Trebuchet::Backend::Redis#get_strategy
       # which will fetch from Redis and unpack json
       # and then cache it for next time
       cache_strategy feature_name, super(feature_name)
