@@ -1,0 +1,21 @@
+<div id="trebuchet">
+	<h1>Trebuchet Timeline</h1>
+	<table class="treb-features">
+		<thead>
+			<tr>
+			  <th>Timestamp</th>
+				<th>Feature Name</th>
+				<th>Launch Strategy</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @history.each do |h| %>
+				<tr>
+				  <td><%= h[:timestamp].strftime("%x %X") %></td>
+					<td><%= h[:feature_name] %></td>
+					<td><%= strategy h[:strategy] %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>

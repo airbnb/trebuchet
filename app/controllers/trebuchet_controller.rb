@@ -15,6 +15,21 @@ class TrebuchetController < ApplicationController
     end
   end
   
+  def timeline
+    @history = []
+    Trebuchet::Feature.all.each do |f|
+      f.history.each do |timestamp, strategy|
+        @history << { 
+          :feature_name => f.name, 
+          :timestamp => timestamp, 
+          :strategy => strategy
+        }
+      end
+    end
+    @history = @history.sort_by { |h| h[:timestamp] }
+    @history.reverse!
+  end
+  
   private
   def control_access
     allowed = if Trebuchet.admin_view.is_a?(Proc)
