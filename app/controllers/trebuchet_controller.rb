@@ -1,6 +1,6 @@
 class TrebuchetController < ApplicationController
   
-  before_filter :control_access
+  before_filter :control_access, :get_time_zone
 
   def index
     @features = Trebuchet::Feature.all
@@ -42,6 +42,19 @@ class TrebuchetController < ApplicationController
       !!Trebuchet.admin_view
     end
     raise ActionController::RoutingError.new('Not Found') unless allowed
+  end
+  
+  def get_time_zone
+    @zone = if Trebuchet.time_zone
+      if Trebuchet.time_zone.is_a?(Proc)
+        Trebuchet.time_zone.call
+      elsif Trebuchet.time_zone.is_a?(String)
+        Trebuchet.time_zone
+      else
+        nil
+      end
+    end
+    @zone = ActiveSupport::TimeZone.new(@zone || 'UTC')
   end
   
 end

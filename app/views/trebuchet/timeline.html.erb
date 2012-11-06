@@ -11,7 +11,7 @@
 		<tbody>
 			<% @history.each do |h| %>
 				<tr>
-				  <td><%= h[:timestamp].strftime("%x %X") %></td>
+				  <td><%= @zone.at(h[:timestamp].to_i).strftime("%x %X %Z") %></td>
 					<td><%= h[:feature_name] %></td>
 					<td><%= strategy h[:strategy] %></td>
 				</tr>

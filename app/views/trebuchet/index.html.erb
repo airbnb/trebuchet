@@ -25,7 +25,7 @@
 					<td class="unstyled collapsed treb-features-history-wrapper" colspan="2">
 						<table class="treb-features treb-features-history well">
 							<% feature.history.each do |time, strategy| %>
-							  <tr><td><%= time.strftime("%x %X") %><br /><%= strategy strategy %></td></tr>
+							  <tr><td><%= @zone.at(time.to_i).strftime("%x %X %Z") %><br /><%= strategy strategy %></td></tr>
 							<% end %>
 						</table>
 					</td>
@@ -59,7 +59,7 @@
 					<td class="unstyled collapsed treb-features-history-wrapper" colspan="1">
 						<table class="treb-features treb-features-history well">
 							<% feature.history.each do |time, strategy| %>
-							  <tr><td><%= time.strftime("%x %X") %><br /><%= strategy strategy %></td></tr>
+							  <tr><td><%= @zone.at(time.to_i).strftime("%x %X %Z") %><br /><%= strategy strategy %></td></tr>
 							<% end %>
 						</table>
 					</td>

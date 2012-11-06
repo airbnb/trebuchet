@@ -4,6 +4,7 @@ class Trebuchet
 
   class << self
     attr_accessor :admin_view, :admin_edit
+    attr_accessor :time_zone
     
     def backend
       self.backend = :memory unless @backend
