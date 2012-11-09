@@ -1,13 +1,6 @@
-if Rails::VERSION::STRING =~ /\A2\./ # Rails 2.x
-
-  ActionController::Routing::Routes.draw do |map|
-    map.trebuchet '/trebuchet.:format', :controller => 'trebuchet'
+Rails.application.routes.draw do |map|
+  namespace 'trebuchet' do
+    root :to => "features#index"
+    get 'timeline' => "trebuchet#timeline"
   end
-
-else # Rails 3
-
-  Rails.application.routes.draw do
-    get "trebuchet" => "trebuchet#index" , :as => :trebuchet
-  end
-
 end

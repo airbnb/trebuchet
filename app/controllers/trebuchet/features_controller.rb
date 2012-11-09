@@ -1,4 +1,4 @@
-class TrebuchetController < ApplicationController
+class Trebuchet::FeaturesController < ApplicationController
   
   before_filter :control_access, :get_time_zone
 
