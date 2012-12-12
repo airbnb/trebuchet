@@ -3,16 +3,29 @@ Trebuchet
 
 Trebuchet launches features at people. Wisely choose a strategy, aim, and launch!
 
+Installation
+------------
+
+
+Trebuchet can be used with Rails or standalone.
+
+To use with Rails:
+gem 'trebuchet', :require => 'trebuchet_rails'
 
 Setup
 -----
 
-Trebuchet can be used with Rails or standalone.
 
 Trebuchet defaults to storing data in memory, or can be used with Redis or Memcache as a data store:
     
     Trebuchet.set_backend :memcached
     Trebuchet.set_backend :redis, :client => Redis.new(:host => 'example.com')
+    Trebuchet.set_backend :redis_cached, :client => Redis.new(:host => 'example.com')
+
+A Rails initializer is a great spot for this. You may want to use a few other settings, either hardcoded values or procs (eval'd in the context of the controller):
+
+    Trebuchet.admin_view = proc { current_user.try(:admin?) } # /trebuchet admin interface access
+    Trebuchet.time_zone = proc { current_user.time_zone } # or just "Mountain Time (US & Canada)"
 
 
 Aim
@@ -61,7 +74,7 @@ Custom Strategies
 Trebuchet ships with a number of default strategies but you can also define your own custom strategies like so:
 
     Trebuchet.define_strategy(:admins) do |user|
-        user.has_role?(:admin)
+        !!(user && user.has_role?(:admin))
     end
 
 controller.current_user is yielded to the block and it should return true for users you want to launch to.
