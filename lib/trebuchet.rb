@@ -91,7 +91,6 @@ class Trebuchet
 
 end
 
-
 require 'set'
 require 'trebuchet/version'
 require 'trebuchet/error'

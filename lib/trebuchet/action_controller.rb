@@ -1,3 +1,5 @@
+require 'trebuchet/action_controller_filter'
+
 module Trebuchet::ActionController
 
   def self.included(base)
