@@ -15,7 +15,8 @@ class Trebuchet::Backend::Redis
         @redis = Redis.new(*args)
       end
       # raise error if not connected
-      @redis.exists(feature_names_key) # @redis.info is slow and @redis.client.connected? is NOT reliable
+      # this is bad news for webservers that fork child processes
+      # @redis.exists(feature_names_key) # @redis.info is slow and @redis.client.connected? is NOT reliable
     rescue Exception => e
       raise Trebuchet::BackendInitializationError, e.message
     end
