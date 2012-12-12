@@ -114,7 +114,7 @@ module TrebuchetHelper
   end
   
   def trebuchet_css
-    filename = File.expand_path(File.dirname(__FILE__) + "/../views/trebuchet/trebuchet.css")
+    filename = File.expand_path(File.dirname(__FILE__) + "/../views/trebuchet_rails/trebuchet.css")
     return IO.read(filename)
   end
   

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do |map|
-  namespace 'trebuchet' do
+  # namespace 'trebuchet' do
+  scope "trebuchet", :module => "trebuchet_rails" do
     root :to => "features#index"
-    get 'timeline' => "trebuchet#timeline"
+    get 'timeline' => "features#timeline"
   end
 end
