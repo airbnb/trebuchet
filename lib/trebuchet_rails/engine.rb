@@ -2,7 +2,7 @@ require 'rails'
 
 module TrebuchetRails
   class Engine < Rails::Engine
-    # isolate_namespace Trebuchet
+    isolate_namespace TrebuchetRails
   end
 end
 
