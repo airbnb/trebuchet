@@ -10,13 +10,15 @@ class Trebuchet::Backend::Redis
     begin
       if args.first.is_a?(Hash) && args.first[:client].is_a?(Redis)
         # ignore other args and use provided Redis connection
+        @options = args.first
         @redis = args.first[:client]
       else
         @redis = Redis.new(*args)
       end
-      # raise error if not connected
-      # this is bad news for webservers that fork child processes
-      # @redis.exists(feature_names_key) # @redis.info is slow and @redis.client.connected? is NOT reliable
+      unless @options && @options[:skip_check]
+        # raise error if not connectedUncaught ReferenceError: google is not defined 
+        @redis.exists(feature_names_key) # @redis.info is slow and @redis.client.connected? is NOT reliable
+      end
     rescue Exception => e
       raise Trebuchet::BackendInitializationError, e.message
     end
