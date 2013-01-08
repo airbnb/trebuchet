@@ -10,5 +10,9 @@ class Trebuchet::Strategy::UserId < Trebuchet::Strategy::Base
   def launch_at?(user, request = nil)
     @user_ids.include?(user.id)
   end
-  
+
+  def to_s
+    "user ids (#{user_ids.empty? ? 'none' : user_ids.to_a.join(', ')})"
+  end
+
 end

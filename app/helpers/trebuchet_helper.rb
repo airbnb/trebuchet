@@ -6,111 +6,13 @@ module TrebuchetHelper
   end
   
   def strategy(strategy)
-    html = case strategy.name
-    when nil
-      default_strategy(strategy)
-    else
-      method = :"#{strategy.name}_strategy"
-      if respond_to?(method)
-        send(method, strategy)
-      else
-        unsupported_strategy(strategy)
-      end
-    end
-    html = if (strategy.name == :multiple)
-      html.join('').html_safe # used recursively, so don't wrap outer with <li>
-    else
-      content_tag(:li, html)
-    end
-  end
-  
-  def users_strategy(strategy)
-    user_ids = strategy.user_ids.to_a
-    str = "user ids: "
-    str << (user_ids.empty? ? 'none' : "#{user_ids.join(', ')}")
-    str
-  end
-
-  def percent_strategy(strategy)
-    percent_strategy_string(strategy, 'logged in users')
-  end
-
-  def visitor_percent_strategy(strategy)
-    percent_strategy_string(strategy, 'visitors')
-  end
-
-  def percent_strategy_string(strategy, kind)
-    str = "#{strategy.percentage}% of #{kind} "
-    if !strategy.instance_variable_get(:@legacy)
-      from = strategy.instance_variable_get(:@from)
-      to = strategy.instance_variable_get(:@to)
-      if to < 0
-        str << " (no users)"        
-      else
-        str << "("
-        str << "user id ending with " if kind != 'visitors'
-        str << "#{from.to_s.rjust(2, '0')}"
-        str << " to #{to.to_s.rjust(2, '0')}" if to != from
-        str << ")"
-      end
-    end
-    str
-  end
-
-  # deprecated
-  # def old_percent_strategy_string(strategy, kind)
-  #   percent = strategy.percentage
-  #   offset = strategy.offset
-  #   low_id = (0 + offset).to_s.rjust(2, '0')
-  #   high_id = ((percent + offset - 1) % 100).to_s.rjust(2, '0')
-  #   str = "#{percent}% of #{kind}"
-  #   if percent == 0
-  #     str << " (no users)"
-  #   elsif percent == 100
-  #     str << " (all users)"
-  #   elsif high_id.to_i < low_id.to_i # wrapped past 100 due to offset
-  #     str << " (user id ending with #{low_id} to 99 "
-  #     str << " and 00"
-  #     str << " to #{high_id}" if high_id != '00'
-  #     str << ")"
-  #   else
-  #     str << " (user id ending with #{low_id}"
-  #     str << " to #{high_id}" if high_id != low_id
-  #     str << ")"
-  #   end
-  #   str
-  # end
-
-  def experiment_strategy(strategy)
-    str = "bucket (#{strategy.bucket.join(', ')}) of total: #{strategy.total_buckets} for experiment: #{strategy.experiment_name}"
-    
-    str
-  end
-  
-  def visitor_experiment_strategy(strategy)
-    "bucket (#{strategy.bucket.join(', ')}) of total: #{strategy.total_buckets} for visitor experiment: #{strategy.experiment_name}"
-  end
-  
-  def multiple_strategy(strategy)
-    strategy.strategies.map do |s|
-      strategy s
-    end
-  end
-  
-  def default_strategy(strategy)
-    "feature not launched"
-  end
-  
-  def custom_strategy(strategy)
-    "#{strategy.custom_name} (custom) #{strategy.options.inspect if strategy.options}"
-  end
-  
-  def invalid_strategy(strategy)
-    "#{strategy.invalid_name} (invalid) #{strategy.options.inspect if strategy.options}"
-  end
-  
-  def unsupported_strategy(strategy)
-    "#{strategy.name} (unsupported)"
+    html =  case strategy.name
+            when :multiple
+              strategy.strategies.map { |s| strategy s }.join().html_safe
+            else
+              strategy.to_s
+            end
+    strategy.name == :multiple ? html : content_tag(:li, html)
   end
   
   def trebuchet_css

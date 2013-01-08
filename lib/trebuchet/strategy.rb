@@ -101,6 +101,31 @@ module Trebuchet::Strategy
       value = ((value - @from) + 200 - offset) % 100
       !!(value < cutoff)
     end
+
+    def offset_from
+      (@from + offset) % 100
+    end
+
+    def offset_to
+      (@to + offset) % 100
+    end
+
+    def to_s
+      kind = self.name == :visitor_percent ? "visitors" : "users"
+      str = "#{percentage}% of #{kind}"
+      if !@legacy
+        if @to < 0
+          str << " (nobody)"        
+        else
+          str << " ("
+          str << "user id ending with " if kind != "visitors"
+          str << "#{offset_from.to_s.rjust(2, '0')}"
+          str << " to #{offset_to.to_s.rjust(2, '0')}" if @to != @from
+          str << ")"
+        end
+      end
+      str
+    end
     
   end
   
@@ -131,6 +156,15 @@ module Trebuchet::Strategy
 
     def as_json
       {:name => experiment_name, :bucket => bucket, :total_buckets => total_buckets}
+    end
+
+    def to_s
+      str = "buckets (#{bucket.join(', ')}) of total: #{total_buckets}"
+      str << " for #{name == :experiment ? "user" : "visitor"} experiment: #{experiment_name}"
+    end
+
+    def inspect
+      "#<#{self.class.name} #{self}>"
     end
     
   end

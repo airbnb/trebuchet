@@ -19,5 +19,9 @@ class Trebuchet::Strategy::Invalid < Trebuchet::Strategy::Base
   def needs_user?
     false
   end
+
+  def to_s
+    "#{invalid_name} (invalid) #{options.inspect if options}"
+  end
   
 end

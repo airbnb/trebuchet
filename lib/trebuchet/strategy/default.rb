@@ -16,5 +16,9 @@ class Trebuchet::Strategy::Default < Trebuchet::Strategy::Base
   def needs_user?
     false
   end
+
+  def to_s
+    "not launched (default)"
+  end
   
 end

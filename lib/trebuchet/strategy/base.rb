@@ -31,5 +31,9 @@ class Trebuchet::Strategy::Base
       end
     end
   end
+
+  def inspect
+    self.to_s
+  end
   
 end

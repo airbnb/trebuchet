@@ -20,4 +20,6 @@ class Trebuchet::Strategy::VisitorExperiment < Trebuchet::Strategy::Base
     false
   end
 
+  # def to_s from experimentable
+
 end

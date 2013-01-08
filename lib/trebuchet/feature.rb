@@ -87,6 +87,15 @@ class Trebuchet::Feature
     {:name => @name, :strategy => strategy}
   end
 
+  def to_s
+    str = "name: \"#{@name}\", "
+    str << "#{strategy.name == :multiple ? 'strategies' : 'strategy'}: #{strategy}"
+  end
+
+  def inspect
+    "#<#{self.class.name} #{self}>"
+  end
+
   private
 
   def chained?

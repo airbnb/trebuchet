@@ -32,4 +32,8 @@ class Trebuchet::Strategy::Custom < Trebuchet::Strategy::Base
     # end
   end
 
+  def to_s
+    "#{custom_name} (custom) #{options.inspect if options}"
+  end
+
 end

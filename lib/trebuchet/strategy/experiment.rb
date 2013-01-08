@@ -13,4 +13,6 @@ class Trebuchet::Strategy::Experiment < Trebuchet::Strategy::Base
     value_in_bucket?(user.id)
   end
 
+  # def to_s from experimentable
+
 end

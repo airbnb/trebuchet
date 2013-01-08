@@ -15,4 +15,6 @@ class Trebuchet::Strategy::Percent < Trebuchet::Strategy::Base
     value_in_range?(user.id.to_i)
   end
 
+  # def to_s from percentable
+
 end

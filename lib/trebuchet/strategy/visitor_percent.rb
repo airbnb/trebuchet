@@ -26,4 +26,6 @@ class Trebuchet::Strategy::VisitorPercent < Trebuchet::Strategy::Base
     false
   end
 
+  # def to_s from percentable
+
 end
