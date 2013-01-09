@@ -2,7 +2,7 @@ require 'rails'
 
 module TrebuchetRails
   class Engine < Rails::Engine
-    isolate_namespace TrebuchetRails
+    isolate_namespace TrebuchetRails if respond_to?(:isolate_namespace)
   end
 end
 
