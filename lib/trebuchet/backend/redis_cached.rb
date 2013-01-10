@@ -1,3 +1,5 @@
+require 'trebuchet/backend/redis'
+
 class Trebuchet::Backend::RedisCached < Trebuchet::Backend::Redis
 
   # cache strategies in memory until clear_cached_strategies is called
