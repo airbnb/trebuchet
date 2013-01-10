@@ -23,4 +23,8 @@ class Trebuchet::Strategy::Hostname < Trebuchet::Strategy::Base
     "hostnames (#{hostnames.empty? ? 'none' : hostnames.join(', ')})"
   end
 
+  def export
+    super @hostnames
+  end
+
 end

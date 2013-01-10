@@ -26,7 +26,7 @@ class Trebuchet::Strategy::Base
     excluded = [:feature, :block]
     {:name => name}.tap do |h|
       instance_variables.map do |v|
-        key = v.gsub('@','').to_sym
+        key = v.to_s.gsub('@','').to_sym
         h[key] = instance_variable_get(v) unless excluded.include?(key)
       end
     end
@@ -34,6 +34,10 @@ class Trebuchet::Strategy::Base
 
   def inspect
     self.to_s
+  end
+
+  def export(options = nil)
+    {:name => self.name, :options => options}
   end
   
 end

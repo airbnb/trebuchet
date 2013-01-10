@@ -126,6 +126,14 @@ module Trebuchet::Strategy
       end
       str
     end
+
+    def export
+      if @style == :percentage
+        super :percentage => @to
+      else
+        super :from => @from, :to => @to
+      end
+    end
     
   end
   
@@ -154,13 +162,17 @@ module Trebuchet::Strategy
       false
     end
 
-    def as_json
+    def as_json(options = {})
       {:name => experiment_name, :bucket => bucket, :total_buckets => total_buckets}
     end
 
     def to_s
       str = "buckets (#{bucket.join(', ')}) of total: #{total_buckets}"
       str << " for #{name == :experiment ? "user" : "visitor"} experiment: #{experiment_name}"
+    end
+
+    def export
+      super :name => experiment_name, :bucket => bucket, :total_buckets => total_buckets
     end
 
     def inspect

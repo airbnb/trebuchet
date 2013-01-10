@@ -15,4 +15,8 @@ class Trebuchet::Strategy::UserId < Trebuchet::Strategy::Base
     "user ids (#{user_ids.empty? ? 'none' : user_ids.to_a.join(', ')})"
   end
 
+  def export
+    super @user_ids.to_a
+  end
+
 end

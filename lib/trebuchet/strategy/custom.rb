@@ -36,4 +36,8 @@ class Trebuchet::Strategy::Custom < Trebuchet::Strategy::Base
     "#{custom_name} (custom) #{options.inspect if options}"
   end
 
+  def export
+    super :custom_name => @custom_name, :options => @options
+  end
+
 end

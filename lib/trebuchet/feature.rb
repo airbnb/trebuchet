@@ -84,7 +84,7 @@ class Trebuchet::Feature
   end
   
   def as_json(options = {})
-    {:name => @name, :strategy => strategy}
+    {:name => @name, :strategy => strategy.as_json(options)}
   end
 
   def to_s

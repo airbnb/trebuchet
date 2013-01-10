@@ -30,4 +30,8 @@ class Trebuchet::Strategy::Multiple < Trebuchet::Strategy::Base
     # strategies.any? { |s| s.needs_user? }
   end
 
+  def export
+    super :strategies => strategies.map(&:export)
+  end
+
 end

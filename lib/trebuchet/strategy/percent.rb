@@ -16,5 +16,7 @@ class Trebuchet::Strategy::Percent < Trebuchet::Strategy::Base
   end
 
   # def to_s from percentable
+  
+  # def export from percentable
 
 end

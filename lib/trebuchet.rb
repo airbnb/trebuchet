@@ -93,6 +93,14 @@ class Trebuchet
     return result
   end
 
+  def self.export
+    {}.tap do |features|
+      Trebuchet.backend.get_feature_names.map do |fn|
+        features[fn] = self.feature(fn).strategy.export
+      end
+    end
+  end
+
 end
 
 require 'set'

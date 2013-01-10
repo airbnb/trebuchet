@@ -15,4 +15,6 @@ class Trebuchet::Strategy::Experiment < Trebuchet::Strategy::Base
 
   # def to_s from experimentable
 
+  # def export from experimentable
+
 end
