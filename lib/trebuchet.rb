@@ -12,8 +12,12 @@ class Trebuchet
     end
     
     def set_backend(backend_type, *args)
-      require "trebuchet/backend/#{backend_type}"
-      @backend = Backend.lookup(backend_type).new(*args)
+      if backend_type.is_a?(Symbol)
+        require "trebuchet/backend/#{backend_type}" 
+        @backend = Backend.lookup(backend_type).new(*args)
+      elsif backend_type.class.name =~ /Trebuchet::Backend/
+        @backend = backend_type
+      end
     end
     
     # this only works with additional args, e.g.: Trebuchet.backend = :memory

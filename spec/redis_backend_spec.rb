@@ -5,6 +5,14 @@ require 'trebuchet/backend/redis'
 
 describe Trebuchet::Backend::Redis do
 
+  before(:all) do
+    @backend = Trebuchet.backend
+  end
+
+  before(:each) do
+    Trebuchet.set_backend :disabled
+  end
+
   it "should set backend to redis with defaults" do
     Trebuchet.backend = :redis
     Trebuchet.backend.should be_a(Trebuchet::Backend::Redis)
@@ -16,6 +24,7 @@ describe Trebuchet::Backend::Redis do
     r = Redis.new
     Redis.stub!(:new).and_return(nil)
     lambda {Trebuchet.set_backend :redis}.should raise_error Trebuchet::BackendInitializationError
+    Trebuchet.backend.should be_a(Trebuchet::Backend::Disabled)
     Trebuchet.backend.instance_variable_get(:@redis).should be_nil
     Trebuchet.set_backend :redis, :client => r
     Trebuchet.backend.instance_variable_get(:@redis).should eql r
@@ -30,9 +39,9 @@ describe Trebuchet::Backend::Redis do
     Trebuchet.set_backend :redis, *args
   end
   
-  after do
+  after(:all) do
     # cleanup
-    Trebuchet.backend = :memory
+    Trebuchet.backend = @backend
   end
  
 
