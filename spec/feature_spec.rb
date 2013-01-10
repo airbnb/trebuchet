@@ -5,6 +5,14 @@ describe Trebuchet::Feature do
   def feature
     Trebuchet.feature('some_feature')
   end
+
+  def feature_names
+    Trebuchet.backend.get_feature_names
+  end
+
+  def archived_feature_names
+    Trebuchet.backend.get_archived_feature_names
+  end
   
   describe :aim do
     
@@ -115,6 +123,27 @@ describe Trebuchet::Feature do
       feature.strategy.options.should == (old_percentages.merge(new_percentages))
     end
     
+  end
+
+  describe :dismantle do
+
+    it "should remove a feature and add it to archived features" do
+      feature.aim(:users, [1])
+      feature_names.include?(feature.name).should be_true
+      feature.dismantle
+      feature_names.include?(feature.name).should be_false
+      archived_feature_names.include?(feature.name).should be_true
+    end
+
+    it "should remove archived feature when dismantled feature is redefined" do
+      feature.dismantle
+      feature_names.include?(feature.name).should be_false
+      archived_feature_names.include?(feature.name).should be_true
+      feature.aim(:percent, 5)
+      feature_names.include?(feature.name).should be_true
+      archived_feature_names.include?(feature.name).should be_false
+    end
+
   end
 
 end
