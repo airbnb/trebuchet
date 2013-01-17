@@ -16,6 +16,13 @@ class Trebuchet::Backend::RedisCached < Trebuchet::Backend::Redis
     end
   end
 
+  def append_strategy(feature_name, strategy, options = nil)
+    # though we can't clear the strategy for all active instances
+    # this will clear the cache in the console environment to show current settings
+    self.clear_cached_strategies
+    super(feature_name, strategy, options)
+  end
+
   def cache_strategy(feature_name, strategy)
     cached_strategies[feature_name] = strategy
     return strategy
