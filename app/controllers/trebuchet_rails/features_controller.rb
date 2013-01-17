@@ -16,7 +16,7 @@ module TrebuchetRails
       
       respond_to do |wants|
         wants.html # index.html.erb
-        wants.json { render :json => @features }
+        wants.json { render :json => @features.map(&:export) }
       end
     end
     
@@ -33,6 +33,15 @@ module TrebuchetRails
       end
       @history = @history.sort_by { |h| h[:timestamp] }
       @history.reverse!
+      respond_to do |wants|
+        wants.html # index.html.erb
+        wants.json do
+           json_history = @history.map do |history|
+            history.tap { |h| h[:strategy] = h[:strategy].export }
+          end
+          render :json => json_history
+        end
+      end
     end
     
     private

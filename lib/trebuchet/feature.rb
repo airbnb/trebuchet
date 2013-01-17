@@ -84,7 +84,7 @@ class Trebuchet::Feature
   end
   
   def as_json(options = {})
-    {:name => @name, :strategy => strategy.as_json(options)}
+    {:name => @name, :strategy => strategy.export}
   end
 
   def to_s
@@ -94,6 +94,10 @@ class Trebuchet::Feature
 
   def inspect
     "#<#{self.class.name} #{self}>"
+  end
+
+  def export
+    {:feature_name => name, :strategy => strategy.export}
   end
 
   private

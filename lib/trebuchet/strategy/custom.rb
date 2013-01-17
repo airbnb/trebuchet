@@ -32,12 +32,16 @@ class Trebuchet::Strategy::Custom < Trebuchet::Strategy::Base
     # end
   end
 
+  def as_json(options = {})
+    {:custom_name => @custom_name, :options => @options}
+  end
+
   def to_s
     "#{custom_name} (custom) #{options.inspect if options}"
   end
 
   def export
-    super :custom_name => @custom_name, :options => @options
+    super as_json
   end
 
 end
