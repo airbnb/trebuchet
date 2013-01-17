@@ -30,13 +30,15 @@ describe Trebuchet::Strategy::VisitorPercent do
     it 'should launch' do
       # offset of some_feature is 33
       Trebuchet.aim('some_feature', :visitor_percent, 100)
+      offset = Trebuchet.feature('some_feature').strategy.offset
       t = Trebuchet.new(User.new(0), mock_request('12345'))
       t.launch?('some_feature').should == true
+      visitor_id = Trebuchet.visitor_id.call
 
-      Trebuchet.aim('some_feature', :visitor_percent, 57)
+      Trebuchet.aim('some_feature', :visitor_percent, 91) # 33 + 91 includes 123 % 100
       t.launch?('some_feature').should == true
 
-      Trebuchet.aim('some_feature', :visitor_percent, 56)
+      Trebuchet.aim('some_feature', :visitor_percent, 90)
       t.launch?('some_feature').should == false
     end
   end
@@ -107,10 +109,6 @@ describe Trebuchet::Strategy::VisitorPercent do
       @trebuchet.launch?("liberty").should == false
     end
     
-    it "should use legacy" do # remove when deprecating legacy percent mode
-      @feature.aim(:visitor_percent, 13)
-      @feature.strategy.instance_variable_get(:@legacy).should == true
-    end
   end
 
 end
