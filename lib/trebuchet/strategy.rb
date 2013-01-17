@@ -112,19 +112,17 @@ module Trebuchet::Strategy
 
     def to_s
       kind = self.name == :visitor_percent ? "visitors" : "users"
-      str = "#{percentage}% of #{kind}"
-      if !@legacy
-        if @to < 0
-          str << " (nobody)"        
-        else
-          str << " ("
-          str << "user id ending with " if kind != "visitors"
-          str << "#{offset_from.to_s.rjust(2, '0')}"
-          str << " to #{offset_to.to_s.rjust(2, '0')}" if @to != @from
-          str << ")"
-        end
+      percentage_str = "#{percentage}% of #{kind}"
+      range_str = if @to < 0
+        "nobody"        
+      else
+        str = ''
+        str << "user id ending with " if kind != "visitors"
+        str << "#{offset_from.to_s.rjust(2, '0')}"
+        str << " to #{offset_to.to_s.rjust(2, '0')}" if @to != @from
+        str
       end
-      str
+      @style == :range ? "#{range_str} (#{percentage_str})" : "#{percentage_str} (#{range_str})"
     end
 
     def export
