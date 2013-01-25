@@ -40,7 +40,7 @@ class Trebuchet
 
     def current
       @current = @current.call if @current.is_a?(Proc)
-      @current
+      @current || new(nil) # return an blank Trebuchet instance if @current is not set
     end
     
   end
