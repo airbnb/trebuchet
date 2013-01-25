@@ -49,6 +49,10 @@ class Trebuchet
     Feature.find(feature_name).aim(*args)
   end
 
+  def self.dismantle(feature_name)
+    Feature.find(feature_name).dismantle
+  end
+
   def self.define_strategy(name, &block)
     Strategy::Custom.define(name, block)
   end
