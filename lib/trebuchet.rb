@@ -5,6 +5,7 @@ class Trebuchet
   class << self
     attr_accessor :admin_view, :admin_edit
     attr_accessor :time_zone
+    attr_accessor :exception_handler
     
     def backend
       self.backend = :memory unless @backend
@@ -95,6 +96,17 @@ class Trebuchet
     result = !!Feature.find(feature).launch_at?(@current_user, @request)
     Trebuchet.log(feature, result)
     return result
+  rescue => e
+    handle_exception(e, feature)
+    return false
+  end
+
+  def handle_exception(exception, feature = nil)
+    if self.class.exception_handler.is_a?(Proc)
+      argc = self.class.exception_handler.arity
+      argc = 3 if argc < 0
+      self.class.exception_handler.call *[exception, feature, self][0,argc]
+    end
   end
 
   def self.export
