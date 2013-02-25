@@ -1,4 +1,6 @@
 require 'rails'
+require File.expand_path(File.dirname(__FILE__) + "/../trebuchet")
+
 
 module TrebuchetRails
   class Engine < Rails::Engine
