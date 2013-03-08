@@ -22,7 +22,7 @@ Trebuchet can be aimed while your application is running. The syntax is:
 
 Which will launch 'awesome_feature' to 1% of users.
 
-Another builtin strategy allows launching to particular user IDs:
+Another built in strategy allows launching to particular user IDs:
 
     Trebuchet.aim('awesome_feature', :users, [23, 42])
 
@@ -32,6 +32,12 @@ You can also combine multiple strategies, in which case the feature is launched 
 
 If you don't aim Trebuchet for a feature, the default action is not to launch it to anyone.
 
+You can also launch features to non-overlapping sets of users (like for an A/B test) with the following:
+
+    Trebuchet.feature("awesome_feature_bucket_1").aim(:visitor_experiment, :name => "awesome_experiment", :total_buckets => 2, :bucket => 1)
+    Trebuchet.feature("awesome_feature_bucket_2").aim(:visitor_experiment, :name => "awesome_experiment", :total_buckets => 2, :bucket => 2)
+
+By default, this will put 50% of users in to `awesome_feature_bucket_1` and the other 50% into `awesome_feature_bucket_1`.
 
 Launch
 ------
