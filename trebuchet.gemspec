@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name        = "trebuchet"
   s.version     = Trebuchet::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Tobi Knaup"]
-  s.email       = ["tobi.knaup@gmail.com"]
+  s.authors     = ["Justin Jones", "Tobi Knaup", "Ross Allen"]
+  s.email       = ["justin@airbnb.com"]
   s.homepage    = "http://www.airbnb.com"
   s.summary     = %q{Trebuchet launches features at people}
   s.description = %q{Wisely choose a strategy, aim, and launch!}

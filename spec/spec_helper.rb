@@ -1,10 +1,13 @@
 $:.unshift File.dirname(__FILE__) + '/../lib'
 
-require 'rubygems'
 require 'bundler'
 
 # Bundler breaks things
-#Bundler.require :default, :development
+Bundler.require :default, :test
+
+require 'mock_redis'
+class Redis < MockRedis ; end
+
 
 require 'trebuchet'
 require 'user'

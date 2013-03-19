@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'redis'
+require 'mock_redis'
 require 'trebuchet/backend/redis'
 
 

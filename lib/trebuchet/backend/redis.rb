@@ -1,4 +1,4 @@
-require 'redis'
+require 'redis' unless defined?(Redis)
 require 'json'
 
 class Trebuchet::Backend::Redis
@@ -8,7 +8,7 @@ class Trebuchet::Backend::Redis
   def initialize(*args)
     @namespace = 'trebuchet/'
     begin
-      if args.first.is_a?(Hash) && args.first[:client].is_a?(Redis)
+      if args.first.is_a?(Hash) && (client = args.first[:client]) && (client.is_a?(Redis) || client.is_a?(MockRedis))
         # ignore other args and use provided Redis connection
         @options = args.first
         @redis = args.first[:client]
