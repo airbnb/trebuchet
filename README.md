@@ -80,3 +80,16 @@ Like parameters for builtin strategies, these can be changed while the applicati
     Trebuchet.aim('time_machine', :markets, ['San Francisco', 'New York City'])
 
 When using Trebuchet together with Rails, a good place to define custom strategies is in an initializer.
+
+Dismantling
+-----------
+
+To dismantle a Trebuchet feature:
+
+    Trebuchet.feature('awesome_feature').dismantle
+
+If you're running an A/B test, be sure to dismantle each of your buckets:
+
+    Trebuchet.feature('awesome_feature_bucket_1').dismantle
+    Trebuchet.feature('awesome_feature_bucket_2').dismantle
+
