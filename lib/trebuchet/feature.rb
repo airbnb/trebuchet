@@ -1,0 +1,109 @@
+class Trebuchet::Feature
+
+  attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
+
+  def self.find(name)
+    new(name)
+  end
+  
+  def self.all
+    Trebuchet.backend.get_feature_names.map{|name| new(name)}
+  end
+  
+  def self.dismantled
+    Trebuchet.backend.get_archived_feature_names.map{|name| new(name)}
+  end
+  
+  def self.exist?(name)
+    !!all.detect{|feature| feature.name == name }
+  end
+
+  def strategy
+    Trebuchet::Strategy.for_feature(self)
+  end
+  
+  def valid?
+    strategy.name != :invalid
+  end
+
+  def launch_at?(user, request = nil)
+    (!strategy.needs_user? || !user.nil?) && strategy.launch_at?(user, request)
+  end
+
+  def aim(strategy_name, options = nil)
+    if chained?
+      Trebuchet.backend.append_strategy(self.name, strategy_name, options)
+    else
+      Trebuchet.backend.set_strategy(self.name, strategy_name, options)
+    end
+    @chained = true
+    self
+  end
+  
+  # add/edit just one strategy without affecting other chained strategies
+  def adjust(strategy_name, options = nil)
+    Trebuchet.backend.append_strategy(self.name, strategy_name, options)
+    self
+  end
+  
+  # add to the options of a strategy (if it is an integer, hash or array)
+  def augment(strategy_name, new_options)
+    # get old options if any
+    strategy_array = Trebuchet.backend.get_strategy(self.name)
+    i = strategy_array.index(strategy_name)
+    old_options = i ? strategy_array[i+1] : nil
+    # augment them carefully
+    options = if old_options == nil
+      new_options
+    elsif old_options.is_a?(Array) && new_options.is_a?(Array)
+      old_options + new_options
+    elsif old_options.is_a?(Hash) && new_options.is_a?(Hash)
+      old_options.merge(new_options)
+    elsif old_options.is_a?(Numeric) && new_options.is_a?(Numeric)
+      old_options + new_options
+    else # otherwise, change nothing
+      old_options
+    end
+    # adjust that strategy
+    self.adjust(strategy_name, options)
+  end
+  
+  def dismantle
+    Trebuchet.backend.remove_feature(self.name)
+  end
+  
+  def history
+    return [] unless Trebuchet.backend.respond_to?(:get_history)
+    Trebuchet.backend.get_history(self.name).map do |row|
+      [Time.at(row.first), Trebuchet::Strategy.find(*row.last)]
+    end
+  end
+  
+  def as_json(options = {})
+    {:name => @name, :strategy => strategy.export}
+  end
+
+  def to_s
+    str = "name: \"#{@name}\", "
+    str << "#{strategy.name == :multiple ? 'strategies' : 'strategy'}: #{strategy}"
+  end
+
+  def inspect
+    "#<#{self.class.name} #{self}>"
+  end
+
+  def export
+    {:feature_name => name, :strategy => strategy.export}
+  end
+
+  private
+
+  def chained?
+    @chained
+  end
+
+end
