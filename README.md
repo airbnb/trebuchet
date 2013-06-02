@@ -3,14 +3,29 @@ Trebuchet
 
 Trebuchet launches features at people. Wisely choose a strategy, aim, and launch!
 
+Installation
+------------
+
+
+Trebuchet can be used with Rails or standalone.
+
+To use with Rails:
+gem 'trebuchet', :require => 'trebuchet_rails'
 
 Setup
 -----
 
-Trebuchet can be used with Rails or standalone.
-In a Rails initializer do:
 
-    Trebuchet.use_with_rails!
+Trebuchet defaults to storing data in memory, or can be used with Redis or Memcache as a data store:
+    
+    Trebuchet.set_backend :memcached
+    Trebuchet.set_backend :redis, :client => Redis.new(:host => 'example.com')
+    Trebuchet.set_backend :redis_cached, :client => Redis.new(:host => 'example.com')
+
+A Rails initializer is a great spot for this. You may want to use a few other settings, either hardcoded values or procs (eval'd in the context of the controller):
+
+    Trebuchet.admin_view = proc { current_user.try(:admin?) } # /trebuchet admin interface access
+    Trebuchet.time_zone = proc { current_user.time_zone } # or just "Mountain Time (US & Canada)"
 
 
 Aim
@@ -22,7 +37,7 @@ Trebuchet can be aimed while your application is running. The syntax is:
 
 Which will launch 'awesome_feature' to 1% of users.
 
-Another built in strategy allows launching to particular user IDs:
+Another builtin strategy allows launching to particular user IDs:
 
     Trebuchet.aim('awesome_feature', :users, [23, 42])
 
@@ -32,12 +47,6 @@ You can also combine multiple strategies, in which case the feature is launched 
 
 If you don't aim Trebuchet for a feature, the default action is not to launch it to anyone.
 
-You can also launch features to non-overlapping sets of users (like for an A/B test) with the following:
-
-    Trebuchet.feature("awesome_feature_bucket_1").aim(:visitor_experiment, :name => "awesome_experiment", :total_buckets => 2, :bucket => 1)
-    Trebuchet.feature("awesome_feature_bucket_2").aim(:visitor_experiment, :name => "awesome_experiment", :total_buckets => 2, :bucket => 2)
-
-By default, this will put 50% of users in to `awesome_feature_bucket_1` and the other 50% into `awesome_feature_bucket_1`.
 
 Launch
 ------
@@ -65,7 +74,7 @@ Custom Strategies
 Trebuchet ships with a number of default strategies but you can also define your own custom strategies like so:
 
     Trebuchet.define_strategy(:admins) do |user|
-        user.has_role?(:admin)
+        !!(user && user.has_role?(:admin))
     end
 
 controller.current_user is yielded to the block and it should return true for users you want to launch to.
@@ -81,15 +90,16 @@ Like parameters for builtin strategies, these can be changed while the applicati
 
 When using Trebuchet together with Rails, a good place to define custom strategies is in an initializer.
 
-Dismantling
------------
 
-To dismantle a Trebuchet feature:
+Visitor Strategy
+----------------
 
-    Trebuchet.feature('awesome_feature').dismantle
+Trebuchet can be used to launch to visitors (no user object present).
+First, set the visitor id either directly (in a before filter) or as a proc:
 
-If you're running an A/B test, be sure to dismantle each of your buckets:
+    Trebuchet.visitor_id = 123
 
-    Trebuchet.feature('awesome_feature_bucket_1').dismantle
-    Trebuchet.feature('awesome_feature_bucket_2').dismantle
+    Trebuchet.visitor_id = proc { |request| request && request.cookies[:visitor] && request.cookies[:visitor].hash }
 
+If you're using a proc, Trebuchet passes in the request object. It expects that the proc returns an integer.
+If it returns anything else, Trebuchet will not launch.
