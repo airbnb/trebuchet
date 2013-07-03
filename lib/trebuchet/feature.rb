@@ -1,5 +1,5 @@
 class Trebuchet::Feature
-  @@deprecated_strategies_enabled = true
+  @@deprecated_strategies_enabled = false
 
   attr_accessor :name
 
