@@ -27,13 +27,8 @@ module Trebuchet::Strategy
 
   def self.name_class_map
     [
-      # The visitor and visitor_percent strategies are not well designed for
-      # experimental analysis so we are in the process of deprecating the
-      # old implementations so that we can safely switch to a more robust
-      # implementation.
-      [:visitor_percent_deprecated, VisitorPercent],
-      [:percent_deprecated, Percent],
-
+      [:visitor_percent_deprecated, VisitorPercentDeprecated],
+      [:percent_deprecated, PercentDeprecated],
       [:percent, Percent],
       [:users, UserId],
       [:default, Default],
@@ -48,8 +43,6 @@ module Trebuchet::Strategy
 
   def self.deprecated_strategy_names
     [
-      :percent,
-      :visitor_percent,
       :percent_deprecated,
       :visitor_percent_deprecated
     ]
@@ -69,6 +62,49 @@ module Trebuchet::Strategy
   ### Percentable module standardizes logic for percentage-based strategies
 
   module Percentable
+
+    attr_reader :percentage
+
+    def initialize(options)
+      set_range_from_options(options)
+    end
+
+    # must be called from initialize
+    def set_range_from_options(options)
+      if options == nil || options.is_a?(Numeric)
+        @percentage = options.to_i
+      else
+        @percentage = 0
+      end
+    end
+
+    def value_in_range?(value)
+      bucket =
+          Digest::SHA1.hexdigest("#{@feature.name}|#{value}").to_i(16) % 100
+      bucket < @percentage
+    end
+
+    def to_s
+      kind = self.name == :visitor_percent ? "visitors" : "users"
+      percentage_str = "#{@percentage}% of #{kind}"
+      "#{percentage_str}"
+    end
+
+    def export
+      if @style == :percentage
+        super :percentage => @to
+      else
+        super :from => @from, :to => @to
+      end
+    end
+  end
+
+
+  # This module is deprecated because the implementation is such that it's
+  # not possible to trust per-feature analysis if multiple features are
+  # using the PercentableDeprecated based strategies because the same
+  # visitors will tend to get the same features (even with the offset).
+  module PercentableDeprecated
 
     def initialize(options)
       set_range_from_options(options)

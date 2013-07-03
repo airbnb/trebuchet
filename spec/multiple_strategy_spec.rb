@@ -3,12 +3,11 @@ require 'spec_helper'
 describe Trebuchet::Strategy::Multiple do
 
   it "should support chaining strategies" do
-    Trebuchet.feature('time_machine').aim(:percent, :from => 5, :to => 7).aim(:users, [10, 11])
-    offset = 72 # for "time_machine"
-    should_launch('time_machine', [5, 6, 7, 10, 11, 105])
-    should_not_launch('time_machine', [23, 42])
+    Trebuchet.feature('time_machine').aim(:percent, 5).aim(:users, [10, 11])
+    should_launch('time_machine', [31, 36, 10, 11, 197])
+    should_not_launch('time_machine', [49, 71])
   end
-  
+
   it "should always return booleans" do
     Trebuchet.feature('time_machine').aim(:percent, 0).aim(:users, [5])
     t = Trebuchet.new User.new(5)
@@ -16,7 +15,7 @@ describe Trebuchet::Strategy::Multiple do
     t = Trebuchet.new User.new(117)
     t.launch?('time_machine').should === false
   end
-  
+
   it "should set @feature on sub-strategies" do
     feature = Trebuchet.feature('time_machine')
     feature.aim(:percent, 10).aim(:users, [5])
@@ -37,7 +36,7 @@ describe Trebuchet::Strategy::Multiple do
     multi = Trebuchet::Strategy::Multiple.new(args)
     multi.launch_at?(user, request)
   end
-  
+
   it "should always return false for needs_user?" do
     s = Trebuchet::Strategy::Multiple.new [:default, nil, :invalid, nil]
     s.needs_user?.should be_false
