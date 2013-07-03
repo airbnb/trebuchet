@@ -91,11 +91,7 @@ module Trebuchet::Strategy
     end
 
     def export
-      if @style == :percentage
-        super :percentage => @to
-      else
-        super :from => @from, :to => @to
-      end
+      super :percentage => @to
     end
   end
 
