@@ -1,4 +1,5 @@
 class Trebuchet::Feature
+  @@deprecated_strategies_enabled = false
 
   attr_accessor :name
 
@@ -9,23 +10,36 @@ class Trebuchet::Feature
   def self.find(name)
     new(name)
   end
-  
+
   def self.all
     Trebuchet.backend.get_feature_names.map{|name| new(name)}
   end
-  
+
   def self.dismantled
     Trebuchet.backend.get_archived_feature_names.map{|name| new(name)}
   end
-  
+
   def self.exist?(name)
     !!all.detect{|feature| feature.name == name }
+  end
+
+  # Runs the block with deprecated features enabled so that various methods
+  # do not raise exceptions. This was added to allow specs to test
+  # deprecated features. Not thread safe.
+  def self.with_deprecated_strategies_enabled(value=true, &block)
+    original_value = @@deprecated_strategies_enabled
+    begin
+      @@deprecated_strategies_enabled = value
+      block.call()
+    ensure
+      @@deprecated_strategies_enabled = original_value
+    end
   end
 
   def strategy
     Trebuchet::Strategy.for_feature(self)
   end
-  
+
   def valid?
     strategy.name != :invalid
   end
@@ -35,6 +49,10 @@ class Trebuchet::Feature
   end
 
   def aim(strategy_name, options = nil)
+    if !@@deprecated_strategies_enabled &&
+       Trebuchet::Strategy.deprecated_strategy_names.include?(strategy_name)
+      raise "The #{strategy_name} strategy is deprecated."
+    end
     if chained?
       Trebuchet.backend.append_strategy(self.name, strategy_name, options)
     else
@@ -43,13 +61,13 @@ class Trebuchet::Feature
     @chained = true
     self
   end
-  
+
   # add/edit just one strategy without affecting other chained strategies
   def adjust(strategy_name, options = nil)
     Trebuchet.backend.append_strategy(self.name, strategy_name, options)
     self
   end
-  
+
   # add to the options of a strategy (if it is an integer, hash or array)
   def augment(strategy_name, new_options)
     # get old options if any
@@ -71,18 +89,18 @@ class Trebuchet::Feature
     # adjust that strategy
     self.adjust(strategy_name, options)
   end
-  
+
   def dismantle
     Trebuchet.backend.remove_feature(self.name)
   end
-  
+
   def history
     return [] unless Trebuchet.backend.respond_to?(:get_history)
     Trebuchet.backend.get_history(self.name).map do |row|
       [Time.at(row.first), Trebuchet::Strategy.find(*row.last)]
     end
   end
-  
+
   def as_json(options = {})
     {:name => @name, :strategy => strategy.export}
   end

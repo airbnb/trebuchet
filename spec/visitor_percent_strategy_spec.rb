@@ -2,12 +2,20 @@ require 'spec_helper'
 
 describe Trebuchet::Strategy::VisitorPercent do
 
+  it "should be deprecated" do
+    Trebuchet::Feature.with_deprecated_strategies_enabled(false) do
+      expect {
+        Trebuchet.aim('some_feature', :visitor_percent, 5)
+      }.to raise_error(/deprecated/)
+    end
+  end
+
   it "should not break if no visitor id is set" do
     Trebuchet.aim('some_feature', :visitor_percent, 100)
     t = Trebuchet.new(User.new(0))
     t.launch?('some_feature').should == false
   end
-  
+
   it "should require a request" do
     Trebuchet.visitor_id = 1
     Trebuchet.aim('some_feature', :visitor_percent, 100)
@@ -27,19 +35,24 @@ describe Trebuchet::Strategy::VisitorPercent do
       Trebuchet.visitor_id = 123
     end
 
-    it 'should launch' do
+    def should_launch_test(feature_name)
       # offset of some_feature is 33
-      Trebuchet.aim('some_feature', :visitor_percent, 100)
+      Trebuchet.aim('some_feature', feature_name, 100)
       offset = Trebuchet.feature('some_feature').strategy.offset
       t = Trebuchet.new(User.new(0), mock_request('12345'))
       t.launch?('some_feature').should == true
       visitor_id = Trebuchet.visitor_id.call
 
-      Trebuchet.aim('some_feature', :visitor_percent, 91) # 33 + 91 includes 123 % 100
+      Trebuchet.aim('some_feature', feature_name, 91) # 33 + 91 includes 123 % 100
       t.launch?('some_feature').should == true
 
-      Trebuchet.aim('some_feature', :visitor_percent, 90)
+      Trebuchet.aim('some_feature', feature_name, 90)
       t.launch?('some_feature').should == false
+    end
+
+    it 'should launch' do
+      should_launch_test(:visitor_percent)
+      should_launch_test(:visitor_percent_deprecated)
     end
   end
 
@@ -74,14 +87,14 @@ describe Trebuchet::Strategy::VisitorPercent do
       t.launch?('some_feature').should == false
     end
   end
-  
+
   describe 'percentable' do
-    
+
     before do
       @feature = Trebuchet.feature("liberty")
       @trebuchet = Trebuchet.new(User.new(0), mock_request('abcdef'))
     end
-    
+
     it "should use from and to" do
       @feature.aim(:visitor_percent, :from => 5, :to => 10)
       Trebuchet.feature("liberty").strategy.offset.should == 0
@@ -94,7 +107,7 @@ describe Trebuchet::Strategy::VisitorPercent do
       Trebuchet.visitor_id = 11
       @trebuchet.launch?("liberty").should == false
     end
-    
+
     it "should use a percentage" do
       @feature.aim(:visitor_percent, :percentage => 25)
       offset = @feature.strategy.offset
@@ -108,7 +121,7 @@ describe Trebuchet::Strategy::VisitorPercent do
       Trebuchet.visitor_id = 25 + offset
       @trebuchet.launch?("liberty").should == false
     end
-    
+
   end
 
 end
