@@ -6,31 +6,31 @@ class Trebuchet
     attr_accessor :admin_view, :admin_edit
     attr_accessor :time_zone
     attr_accessor :exception_handler
-    
+
     def backend
       self.backend = :memory unless @backend
       @backend
     end
-    
+
     def set_backend(backend_type, *args)
       if backend_type.is_a?(Symbol)
-        require "trebuchet/backend/#{backend_type}" 
+        require "trebuchet/backend/#{backend_type}"
         @backend = Backend.lookup(backend_type).new(*args)
       elsif backend_type.class.name =~ /Trebuchet::Backend/
         @backend = backend_type
       end
     end
-    
+
     # this only works with additional args, e.g.: Trebuchet.backend = :memory
     alias_method :backend=, :set_backend
-    
+
     # Logging done at class level
     # TODO: split by user identifier so instance can return scoped to one user
     # (in case multiple users have user.trebuchet called)
     def initialize_logs
       @logs = {}
     end
-    
+
     def log(feature_name, result)
       initialize_logs if @logs == nil
       @logs[feature_name] = result
@@ -43,7 +43,7 @@ class Trebuchet
       @current = @current.call if @current.is_a?(Proc)
       @current || new(nil) # return an blank Trebuchet instance if @current is not set
     end
-    
+
   end
 
   def self.aim(feature_name, *args)
@@ -130,6 +130,7 @@ require 'trebuchet/strategy'
 require 'trebuchet/strategy/base'
 require 'trebuchet/strategy/default'
 require 'trebuchet/strategy/percent'
+require 'trebuchet/strategy/percent_deprecated'
 require 'trebuchet/strategy/user_id'
 require 'trebuchet/strategy/experiment'
 require 'trebuchet/strategy/visitor_experiment'
@@ -137,5 +138,6 @@ require 'trebuchet/strategy/custom'
 require 'trebuchet/strategy/invalid'
 require 'trebuchet/strategy/multiple'
 require 'trebuchet/strategy/visitor_percent'
+require 'trebuchet/strategy/visitor_percent_deprecated'
 require 'trebuchet/strategy/hostname'
 require 'trebuchet/action_controller'

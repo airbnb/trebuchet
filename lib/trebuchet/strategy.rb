@@ -24,9 +24,11 @@ module Trebuchet::Strategy
       Invalid.new(strategy_name, options)
     end
   end
-  
+
   def self.name_class_map
     [
+      [:visitor_percent_deprecated, VisitorPercentDeprecated],
+      [:percent_deprecated, PercentDeprecated],
       [:percent, Percent],
       [:users, UserId],
       [:default, Default],
@@ -38,26 +40,72 @@ module Trebuchet::Strategy
       [:visitor_experiment, VisitorExperiment]
     ]
   end
-  
+
+  def self.deprecated_strategy_names
+    [
+      :percent_deprecated,
+      :visitor_percent_deprecated
+    ]
+  end
+
   def self.class_for_name(name)
     classes = Hash[name_class_map]
     classes[name]
   end
-  
+
   def self.name_for_class(klass)
     names = Hash[name_class_map.map(&:reverse)]
     names[klass]
   end
-  
-    
+
+
   ### Percentable module standardizes logic for percentage-based strategies
-  
+
   module Percentable
-    
+
+    attr_reader :percentage
+
     def initialize(options)
       set_range_from_options(options)
     end
-    
+
+    # must be called from initialize
+    def set_range_from_options(options)
+      if options == nil || options.is_a?(Numeric)
+        @percentage = options.to_i
+      else
+        @percentage = 0
+      end
+    end
+
+    def value_in_range?(value)
+      bucket =
+          Digest::SHA1.hexdigest("#{@feature.name}|#{value}").to_i(16) % 100
+      bucket < @percentage
+    end
+
+    def to_s
+      kind = self.name == :visitor_percent ? "visitors" : "users"
+      percentage_str = "#{@percentage}% of #{kind}"
+      "#{percentage_str}"
+    end
+
+    def export
+      super :percentage => @to
+    end
+  end
+
+
+  # This module is deprecated because the implementation is such that it's
+  # not possible to trust per-feature analysis if multiple features are
+  # using the PercentableDeprecated based strategies because the same
+  # visitors will tend to get the same features (even with the offset).
+  module PercentableDeprecated
+
+    def initialize(options)
+      set_range_from_options(options)
+    end
+
     # must be called from initialize
     def set_range_from_options(options)
       if options == nil || options.is_a?(Numeric)
@@ -114,7 +162,7 @@ module Trebuchet::Strategy
       kind = self.name == :visitor_percent ? "visitors" : "users"
       percentage_str = "#{percentage}% of #{kind}"
       range_str = if @to < 0
-        "nobody"        
+        "nobody"
       else
         str = ''
         str << "user id ending with " if kind != "visitors"
@@ -132,20 +180,20 @@ module Trebuchet::Strategy
         super :from => @from, :to => @to
       end
     end
-    
+
   end
-  
+
   module Experimentable
-    
+
     attr_reader :bucket, :total_buckets, :experiment_name
-    
+
     def initialize_experiment(options)
       options.keys.each {|k| options[k.to_sym] = options.delete(k)} # cheap symbolize_keys
       @experiment_name = options[:name]
       @bucket = [ options[:bucket] ].flatten # always treat as an array
       @total_buckets = options[:total_buckets] || 5
     end
-    
+
     def value_in_bucket?(value)
       return false if value == nil || !value.is_a?(Numeric)
       return false unless self.valid?
@@ -153,7 +201,7 @@ module Trebuchet::Strategy
       b = Digest::SHA1.hexdigest("experiment: #{@experiment_name.downcase} user: #{value}").to_i(16) % total_buckets
       !!@bucket.include?(b + 1) # is user in this bucket?
     end
-    
+
     def valid?
       experiment_name && total_buckets > 0 && bucket.max <= total_buckets && (1..total_buckets).include?(bucket.min)
     rescue
@@ -176,7 +224,7 @@ module Trebuchet::Strategy
     def inspect
       "#<#{self.class.name} #{self}>"
     end
-    
+
   end
 
 end

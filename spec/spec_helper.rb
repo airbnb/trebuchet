@@ -12,6 +12,12 @@ class Redis < MockRedis ; end
 require 'trebuchet'
 require 'user'
 
+RSpec.configure do |config|
+  config.around(:each) { |ex|
+    Trebuchet::Feature.with_deprecated_strategies_enabled(&ex)
+  }
+end
+
 # # uncomment to run specs against Redis backend instead of Memory backend
 
 # require 'redis'
