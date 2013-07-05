@@ -26,8 +26,8 @@ describe Trebuchet::Strategy::Percent do
     }
     # If you run this to larger N it approaches .95 and 0.05. This is
     # hash function dependent but it's a nice santity check.
-    map[false].should == 0.9521
-    map[true].should == 0.0479
+    map[false].should be_close(0.95, 0.02)
+    map[true].should be_close(0.05, 0.02)
   end
 
   it "should not yank the feature from users when percentage is increased" do
