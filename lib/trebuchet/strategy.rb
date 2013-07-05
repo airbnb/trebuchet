@@ -91,7 +91,7 @@ module Trebuchet::Strategy
     end
 
     def export
-      super :percentage => @to
+      super @percentage
     end
   end
 
