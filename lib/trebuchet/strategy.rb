@@ -3,8 +3,13 @@ require 'digest/sha1'
 module Trebuchet::Strategy
 
   def self.for_feature(feature)
-    strategy_args = Trebuchet.backend.get_strategy(feature.name)
-    find(*strategy_args).tap {|s| s.feature = feature }
+    stub_state = Trebuchet::Feature.stubbed_features[feature.name]
+    if stub_state
+      Stub.new(stub_state)
+    else
+      strategy_args = Trebuchet.backend.get_strategy(feature.name)
+      find(*strategy_args).tap {|s| s.feature = feature }
+    end
   end
 
   def self.find(*args)
@@ -25,6 +30,8 @@ module Trebuchet::Strategy
     end
   end
 
+  # The stub strategy purposely left out of this list as it should be
+  # accessible via the testing interface only and not externally.
   def self.name_class_map
     [
       [:visitor_percent_deprecated, VisitorPercentDeprecated],
