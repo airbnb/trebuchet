@@ -1,6 +1,6 @@
-class Trebuchet::Strategy::Percent < Trebuchet::Strategy::Base
+class Trebuchet::Strategy::PercentDeprecated < Trebuchet::Strategy::Base
 
-  include Trebuchet::Strategy::Percentable
+  include Trebuchet::Strategy::PercentableDeprecated
 
   def initialize(options)
     set_range_from_options(options)
@@ -16,3 +16,4 @@ class Trebuchet::Strategy::Percent < Trebuchet::Strategy::Base
   # def export from percentable
 
 end
+
