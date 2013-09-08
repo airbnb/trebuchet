@@ -54,6 +54,10 @@ class Trebuchet
     Feature.find(feature_name).dismantle
   end
 
+  def self.dismantle_stubs
+    Feature.dismantle_stubs
+  end
+
   def self.define_strategy(name, &block)
     Strategy::Custom.define(name, block)
   end
@@ -140,4 +144,5 @@ require 'trebuchet/strategy/multiple'
 require 'trebuchet/strategy/visitor_percent'
 require 'trebuchet/strategy/visitor_percent_deprecated'
 require 'trebuchet/strategy/hostname'
+require 'trebuchet/strategy/stub'
 require 'trebuchet/action_controller'
