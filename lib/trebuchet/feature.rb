@@ -1,4 +1,8 @@
+require 'trebuchet/feature/stubbing'
+
 class Trebuchet::Feature
+  include Stubbing
+
   @@deprecated_strategies_enabled = true
 
   attr_accessor :name
