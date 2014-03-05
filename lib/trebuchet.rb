@@ -77,8 +77,8 @@ class Trebuchet
   end
 
   def self.use_with_rails!
-    if defined?(::ActionController::Base)
-      ::ActionController::Base.send(:include, Trebuchet::ActionController)
+    if defined?(ActionController::Base)
+      ActionController::Base.send(:include, Trebuchet::ActionController)
     end
   end
 
