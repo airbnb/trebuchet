@@ -215,13 +215,22 @@ module Trebuchet::Strategy
       false
     end
 
+    def type
+      "#{name == :experiment ? "user" : "visitor"} experiment"
+    end
+
     def as_json(options = {})
-      {:name => experiment_name, :bucket => bucket, :total_buckets => total_buckets}
+      {
+        :name => experiment_name,
+        :bucket => bucket,
+        :total_buckets => total_buckets,
+        :type => self.type
+      }
     end
 
     def to_s
       str = "buckets (#{bucket.join(', ')}) of total: #{total_buckets}"
-      str << " for #{name == :experiment ? "user" : "visitor"} experiment: #{experiment_name}"
+      str << " for #{self.type} experiment: #{experiment_name}"
     end
 
     def export
