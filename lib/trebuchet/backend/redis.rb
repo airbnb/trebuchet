@@ -91,6 +91,28 @@ class Trebuchet::Backend::Redis
     end
   end
 
+  def get_all_history(include_archived = false)
+    history = []
+
+    features = @redis.smembers(feature_names_key)
+    features += @redis.smembers(archived_feature_names_key) if include_archived
+
+    result = @redis.pipelined do
+      features.each do |feature_name|
+        @redis.smembers(feature_history_key(feature_name))
+      end
+    end
+
+    features.zip(result).each do |feature_name, timestamps|
+      timestamps.each do |timestamp|
+        history << [timestamp.to_i, feature_name]
+      end
+    end
+
+    # sort in reverse timestamp order
+    history.sort! { |x,y| y.first <=> x.first }
+  end
+
   private
   
   def archived_feature_names_key
