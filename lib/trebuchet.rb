@@ -123,6 +123,13 @@ class Trebuchet
     end
   end
 
+  def self.history(include_archived = false)
+    return [] unless Trebuchet.backend.respond_to?(:get_all_history)
+    Trebuchet.backend.get_all_history(include_archived).map do |row|
+      [Time.at(row.first), Feature.find(row.last)]
+    end
+  end
+
 end
 
 require 'set'
