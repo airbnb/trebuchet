@@ -41,7 +41,7 @@ class Trebuchet
     attr_accessor :current
 
     def current
-      @current = @current_block.call if @current_block.respond_to?(:call)
+      @current ||= @current_block.call if @current_block.respond_to?(:call)
       @current || new(nil) # return an blank Trebuchet instance if @current is not set
     end
 
