@@ -10,7 +10,7 @@ module Trebuchet::ActionController
   end
 
   def trebuchet
-    @trebuchet ||= Trebuchet.new(current_user, request)
+    Trebuchet.current
   end
 
 end

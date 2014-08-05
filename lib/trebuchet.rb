@@ -6,6 +6,7 @@ class Trebuchet
     attr_accessor :admin_view, :admin_edit
     attr_accessor :time_zone
     attr_accessor :exception_handler
+    attr_accessor :current_block
 
     def backend
       self.backend = :memory unless @backend
@@ -40,8 +41,12 @@ class Trebuchet
     attr_accessor :current
 
     def current
-      @current = @current.call if @current.is_a?(Proc)
+      @current ||= @current_block.call if @current_block.respond_to?(:call)
       @current || new(nil) # return an blank Trebuchet instance if @current is not set
+    end
+
+    def reset_current!
+      @current = nil
     end
 
   end
