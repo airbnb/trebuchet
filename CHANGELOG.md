@@ -1,3 +1,6 @@
+## 0.8.0 (Jul 20, 2015)
+  - adds a new backened redis_hammerspaced
+
 ## 0.6.3 (Sep 7, 2013)
   - reimplements the percent strategy
   - adds per-feature stubbing interface
