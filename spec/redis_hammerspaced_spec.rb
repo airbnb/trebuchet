@@ -36,13 +36,34 @@ describe Trebuchet::Backend::RedisHammerspaced do
                           :hammerspace => {
                             "trebuchet/feature-names" => ["foo", "bar"].to_s, # stringified array
                             "trebuchet/features/foo" => {
-                              "everyone" => nil,
-                              "users" => [1, 2, 3],
+                              "everyone" => [nil],
+                              "users" => [[1, 2, 3]],
                             }.to_json, # stringified json
                           },
                           :skip_check => true
     Trebuchet.backend.get_feature_names.should eq ["foo", "bar"]
     Trebuchet.backend.get_strategy("foo").should eq [:everyone, nil, :users, [1, 2, 3]]
+    hammerspace = {
+      "trebuchet/feature-names" => ["foo", "bar"].to_s, # stringified array
+      "trebuchet/features/foo" => {
+        "everyone" => [nil],
+        "users" => [[1, 2]],
+      }.to_json
+    }
+    def hammerspace.uid
+      @uid ||= Time.now().to_i
+      @uid = @uid + 1
+    end
+    def hammerspace.close
+    end
+    Trebuchet.backend.instance_variable_set(
+      :@hammerspace,
+      hammerspace
+    )
+    Trebuchet.backend.get_strategy("foo").should eq [:everyone, nil, :users, [1, 2, 3]]
+    # after refresh we should have the up-to-date strategy
+    Trebuchet.backend.refresh
+    Trebuchet.backend.get_strategy("foo").should eq [:everyone, nil, :users, [1, 2]]
   end
 
   after(:all) do

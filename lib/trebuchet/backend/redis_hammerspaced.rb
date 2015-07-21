@@ -11,20 +11,9 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
   attr_accessor :namespace
 
   def initialize(*args)
-    @namespace = 'trebuchet/'
-    begin
-      # args.first must be a hash
-      @options = args.first
-      @redis = @options[:client]
-      @hammerspace = @options[:hammerspace]
-      unless @options[:skip_check]
-        # raise error if not connectedUncaught ReferenceError: google is not defined
-        @redis.exists(feature_names_key) # @redis.info is slow and @redis.client.connected? is NOT reliable
-        @hammerspace.has_key?(feature_names_key)
-      end
-    rescue Exception => e
-      raise Trebuchet::BackendInitializationError, e.message
-    end
+    # args.first must be a hash
+    super(*args)
+    @hammerspace = args.first[:hammerspace]
   end
 
   def get_strategy(feature_name)
@@ -39,27 +28,30 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
 
   def get_strategy_hammerspace(feature_name)
     # Read from hammerspace
-    return nil unless @hammerspace.has_key?(feature_key(feature_name))
-    # h will be a string, we need to convert it back to Hash
     h = @hammerspace[feature_key(feature_name)]
+    return nil unless h
+    # h will be a string, we need to convert it back to Hash
     begin
       h = JSON.load(h)
     rescue
       return nil
     end
-    unpack_strategy(h)
+    unpack_strategy_hammerspace(h)
   end
 
-  def unpack_strategy(options)
+  def unpack_strategy_hammerspace(options)
     # We don't need to further convert values
     # because it's already taken care of
     # by the refresh cron job
+    # assumption here is that v will be an array and we
+    # are using the first element for now
+    # This makes the format compatible with redis backend
     return nil unless options.is_a?(Hash)
     [].tap do |a|
       options.each do |k, v|
         key = k.to_sym
         a << key
-        a << v
+        a << v.first
       end
     end
   end
@@ -73,13 +65,12 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
   def append_strategy(feature_name, strategy, options = nil)
     # though we can't clear the strategy for all active instances
     # this will clear the cache in the console environment to show current settings
-    self.clear_cached_strategies
+    clear_cached_strategies
     super(feature_name, strategy, options)
   end
 
   def cache_strategy(feature_name, strategy)
     cached_strategies[feature_name] = strategy
-    return strategy
   end
 
   def cached_strategies
