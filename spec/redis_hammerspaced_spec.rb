@@ -71,10 +71,6 @@ describe Trebuchet::Backend::RedisHammerspaced do
       "everyone" => [nil],
       "users" => [[1, 2]],
     }.to_json
-    Trebuchet.backend.instance_variable_set(
-      :@hammerspace,
-      hammerspace
-    )
     Trebuchet.backend.get_strategy("foo").should eq [:everyone, nil, :users, [1, 2, 3]]
     # after refresh we should have the up-to-date strategy
     Trebuchet.backend.refresh
