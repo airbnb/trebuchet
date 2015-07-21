@@ -43,11 +43,16 @@ describe Trebuchet::Backend::RedisHammerspaced do
                           :skip_check => true
     Trebuchet.backend.get_feature_names.should eq ["foo", "bar"]
     Trebuchet.backend.get_strategy("foo").should eq [:everyone, nil, :users, [1, 2, 3]]
+  end
+
+  it "should properly invalidate local cache" do
+    r = Redis.new
+    Redis.stub!(:new).and_return(nil)
     hammerspace = {
-      "trebuchet/feature-names" => ["foo", "bar"].to_s, # stringified array
+      "trebuchet/feature-names" => ["foo", "bar"].to_s,
       "trebuchet/features/foo" => {
         "everyone" => [nil],
-        "users" => [[1, 2]],
+        "users" => [[1, 2, 3]],
       }.to_json
     }
     def hammerspace.uid
@@ -56,6 +61,16 @@ describe Trebuchet::Backend::RedisHammerspaced do
     end
     def hammerspace.close
     end
+    Trebuchet.set_backend :redis_hammerspaced,
+                          :client => r,
+                          :hammerspace => hammerspace,
+                          :skip_check => true
+    # Force to load strategy to local cache
+    Trebuchet.backend.get_strategy("foo")
+    hammerspace["trebuchet/features/foo"] = {
+      "everyone" => [nil],
+      "users" => [[1, 2]],
+    }.to_json
     Trebuchet.backend.instance_variable_set(
       :@hammerspace,
       hammerspace

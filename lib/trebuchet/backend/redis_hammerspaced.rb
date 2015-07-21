@@ -82,7 +82,7 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
   end
 
   def refresh
-    # We close and reopen hammerspace to see if we nee
+    # We close and reopen hammerspace to see if we need to invalidate local cache
     uid = @hammerspace.uid
     @hammerspace.close
     if @hammerspace.uid != uid
