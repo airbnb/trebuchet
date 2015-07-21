@@ -5,14 +5,15 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
 
   # This class will rely on a cron job to sync all trebuchet features
   # to local hammerspace thus this class never directly updates hammerspace
-  # We also cache in memory the features as we do in redis_cached
+  # We also cache in memory the features and rely on before_filter
+  # to lazily invalidate local cache
 
   attr_accessor :namespace
 
   def initialize(*args)
     @namespace = 'trebuchet/'
     begin
-      # args must be a hash
+      # args.first must be a hash
       @options = args.first
       @redis = @options[:client]
       @hammerspace = @options[:hammerspace]
@@ -85,14 +86,17 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
     @cached_strategies ||= Hash.new
   end
 
-  def cache_cleared_at
-    @cache_cleared_at ||= Time.now
-  end
-
   def clear_cached_strategies
-    @cache_cleared_at = Time.now
     @cached_strategies = nil
   end
 
+  def refresh
+    # We close and reopen hammerspace to see if we nee
+    uid = @hammerspace.uid
+    @hammerspace.close
+    if @hammerspace.uid != uid
+      clear_cached_strategies
+    end
+  end
 
 end
