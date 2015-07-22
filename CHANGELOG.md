@@ -1,3 +1,6 @@
+## 0.8.1 (Jul 21, 2015)
+  - update redis backend to update a sentinel to indicate modifications
+
 ## 0.8.0 (Jul 20, 2015)
   - adds a new backened redis_hammerspaced
 

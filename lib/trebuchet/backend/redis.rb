@@ -48,6 +48,7 @@ class Trebuchet::Backend::Redis
   def set_strategy(feature_name, strategy, options = nil)
     remove_strategy(feature_name)
     append_strategy(feature_name, strategy, options)
+    update_sentinel
   end
 
   def append_strategy(feature_name, strategy, options = nil)
@@ -55,10 +56,12 @@ class Trebuchet::Backend::Redis
     @redis.hset(feature_key(feature_name), strategy, [options].to_json) # have to put options in container for json
     @redis.sadd(feature_names_key, feature_name)
     store_history(feature_name)
+    update_sentinel
   end
   
   def remove_strategy(feature_name)
     @redis.del(feature_key(feature_name))
+    update_sentinel
   end
   
   def get_feature_names
@@ -73,6 +76,7 @@ class Trebuchet::Backend::Redis
     @redis.del(feature_key(feature_name))
     @redis.srem(feature_names_key, feature_name)
     @redis.sadd(archived_feature_names_key, feature_name)
+    update_sentinel
   end
   
   def store_history(feature_name)
@@ -113,6 +117,14 @@ class Trebuchet::Backend::Redis
     history.sort! { |x,y| y.first <=> x.first }
   end
 
+  def update_sentinel
+    @redis.set(sentinel_key, Time.now.to_i)
+  end
+
+  def get_sentinel
+    @redis.get(sentinel_key) || Time.now.to_i
+  end
+
   private
   
   def archived_feature_names_key
@@ -131,6 +143,10 @@ class Trebuchet::Backend::Redis
     key = "#{namespace}feature-history/#{feature_name}"
     key = "#{key}/#{timestamp}" if timestamp
     key
+  end
+
+  def sentinel_key
+    "#{namespace}last_updated"
   end
 
 end
