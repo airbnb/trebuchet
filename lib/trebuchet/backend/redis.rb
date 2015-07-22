@@ -122,8 +122,7 @@ class Trebuchet::Backend::Redis
   end
 
   def get_sentinel
-    v = @redis.get(sentinel_key)
-    v || Time.now.to_i
+    @redis.get(sentinel_key) || Time.now.to_i
   end
 
   private
@@ -147,7 +146,7 @@ class Trebuchet::Backend::Redis
   end
 
   def sentinel_key
-    "#{namespace}sentinel"
+    "#{namespace}last_updated"
   end
 
 end
