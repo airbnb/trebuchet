@@ -1,3 +1,6 @@
+## 0.9.0 (Jul 22, 2015)
+  - adds update_hammerspace method so we can sync redis into local hammerspace
+
 ## 0.8.1 (Jul 21, 2015)
   - update redis backend to update a sentinel to indicate modifications
 
