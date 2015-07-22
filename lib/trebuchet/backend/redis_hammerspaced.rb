@@ -90,4 +90,42 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
     end
   end
 
+  def update_hammerspace(forced = false)
+    last_updated = get_sentinel
+
+    return if !forced && last_updated == @hammerspace[sentinel_key]
+
+    feature_names = @redis.smembers(feature_names_key)
+
+    features = @redis.pipelined do
+      feature_names.each do |feature_name|
+        @redis.hgetall(feature_key(feature_name))
+      end
+    end
+
+    hash = generate_hammerspace_hash(feature_names, features, last_updated)
+
+    @hammerspace.replace(hash)
+    @hammerspace.close
+    clear_cached_strategies
+  end
+
+  # feature_names is an array of strings
+  # features is an array of strategies
+  # Each strategy is of form ["<key1>", "<value1>", "<key2>", "<value2>"...]
+  # We need to decode the values because they are in string form (not actual hash)
+  def generate_hammerspace_hash(feature_names, features, last_updated)
+    hash = {
+      sentinel_key => last_updated,
+      feature_names_key => feature_names.to_json,
+    }
+
+    feature_names.zip(features) do |feature_name, feature|
+      h = {}
+      feature.each_slice(2) {|k,v| h[k]=JSON.load(v)}
+      hash[feature_key(feature_name)] = h.to_json
+    end
+    hash
+  end
+
 end
