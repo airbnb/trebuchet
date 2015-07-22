@@ -77,6 +77,45 @@ describe Trebuchet::Backend::RedisHammerspaced do
     Trebuchet.backend.get_strategy("foo").should eq [:everyone, nil, :users, [1, 2]]
   end
 
+  it "should properly generate hammerspace hash" do
+    r = Redis.new
+    Redis.stub!(:new).and_return(nil)
+    Trebuchet.set_backend :redis_hammerspaced,
+                          :client => r,
+                          :hammerspace => {},
+                          :skip_check => true
+    feature_names = ["foo", "bar"]
+    features = [
+      ["everyone", "[null]", "user", "[[1,2,3]]"], # foo
+      ["visitor_experiment", "[{\"name\":\"rate\",\"total_buckets\":5,\"bucket\":1}]"] # bar
+    ]
+    foo_string = {
+      "everyone" => [nil],
+      "user" => [[1,2,3]],
+    }.to_json
+    bar_string = {
+      "visitor_experiment" => [
+        {
+          "name" => "rate",
+          "total_buckets" => 5,
+          "bucket" => 1,
+        }
+      ],
+    }.to_json
+    last_updated = Time.now.to_i
+    expected_hash = {
+      "trebuchet/feature-names" => feature_names.to_json,
+      "trebuchet/features/foo" => foo_string,
+      "trebuchet/features/bar" => bar_string,
+      "trebuchet/last_updated" => last_updated,
+    }
+    Trebuchet.backend.generate_hammerspace_hash(
+      feature_names,
+      features,
+      last_updated
+    ).should eq expected_hash
+  end
+
   after(:all) do
     # cleanup
     Trebuchet.backend = @backend
