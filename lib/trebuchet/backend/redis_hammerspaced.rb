@@ -116,7 +116,7 @@ class Trebuchet::Backend::RedisHammerspaced < Trebuchet::Backend::Redis
   # We need to decode the values because they are in string form (not actual hash)
   def generate_hammerspace_hash(feature_names, features, last_updated)
     hash = {
-      sentinel_key => last_updated,
+      sentinel_key => last_updated.to_s,
       feature_names_key => feature_names.to_json,
     }
 

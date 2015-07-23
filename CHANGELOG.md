@@ -1,3 +1,6 @@
+## 0.9.1 (Jul 22, 2015)
+  - fix last_update type in redis_hammerspaced
+
 ## 0.9.0 (Jul 22, 2015)
   - adds update_hammerspace method so we can sync redis into local hammerspace
 
