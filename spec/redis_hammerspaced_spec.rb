@@ -107,7 +107,7 @@ describe Trebuchet::Backend::RedisHammerspaced do
       "trebuchet/feature-names" => feature_names.to_json,
       "trebuchet/features/foo" => foo_string,
       "trebuchet/features/bar" => bar_string,
-      "trebuchet/last_updated" => last_updated,
+      "trebuchet/last_updated" => last_updated.to_s,
     }
     Trebuchet.backend.generate_hammerspace_hash(
       feature_names,
