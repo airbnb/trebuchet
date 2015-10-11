@@ -17,9 +17,9 @@ module Trebuchet::Strategy
 
     if args.size > 2
       Multiple.new(args)
-    elsif strategy_name.nil?
+    elsif strategy_name.nil? || strategy_name == :default
       # Strategy hasn't been defined yet
-      Default.new
+      Default.instance
     elsif Custom.exists?(strategy_name)
       Custom.new(strategy_name, options)
     elsif klass = class_for_name(strategy_name)
