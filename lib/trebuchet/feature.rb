@@ -14,7 +14,7 @@ class Trebuchet::Feature
 
   def self.find(name)
     feature = @@features[name]
-    if not feature
+    if !feature
       feature = new(name)
       @@features[name] = feature
     end
