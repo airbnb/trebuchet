@@ -4,6 +4,7 @@ class Trebuchet::Feature
   include Stubbing
 
   @@deprecated_strategies_enabled = true
+  @@features = {}
 
   attr_accessor :name
 
@@ -12,7 +13,19 @@ class Trebuchet::Feature
   end
 
   def self.find(name)
-    new(name)
+    feature = @@features[name]
+    if not feature
+      feature = new(name)
+      @@features[name] = feature
+    end
+
+    feature.reset
+
+    feature
+  end
+
+  def reset
+    @chained = false
   end
 
   def self.all
@@ -102,6 +115,14 @@ class Trebuchet::Feature
     return [] unless Trebuchet.backend.respond_to?(:get_history)
     Trebuchet.backend.get_history(self.name).map do |row|
       [Time.at(row.first), Trebuchet::Strategy.find(*row.last)]
+    end
+  end
+
+  def feature_id
+    begin
+      @feature_id ||= Trebuchet::SHA1.hexdigest(@name).to_i(16)
+    rescue
+      return 0
     end
   end
 

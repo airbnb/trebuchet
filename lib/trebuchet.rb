@@ -1,6 +1,12 @@
+require 'digest/sha1'
+
 class Trebuchet
 
   @@visitor_id = nil
+
+  # initialize a single one to save object allocations
+  # Todo perhaps choose a better hash instead of sha1
+  SHA1 = Digest::SHA1.new
 
   class << self
     attr_accessor :admin_view, :admin_edit
