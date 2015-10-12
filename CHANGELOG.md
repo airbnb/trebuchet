@@ -1,3 +1,8 @@
+## 0.9.2 (October 11, 2015)
+  - add :nobody and :everybody strategies
+  - cache features
+  - make :default strategy a singleton
+
 ## 0.9.1 (Jul 22, 2015)
   - fix last_update type in redis_hammerspaced
 
