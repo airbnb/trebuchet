@@ -20,7 +20,7 @@ class Trebuchet::Strategy::Nobody < Trebuchet::Strategy::Base
   end
 
   def to_s
-    "nobody (nobody)"
+    "launched to nobody"
   end
 
 end

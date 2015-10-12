@@ -20,7 +20,7 @@ class Trebuchet::Strategy::Everyone < Trebuchet::Strategy::Base
   end
 
   def to_s
-    "everyone (everyone)"
+    "launched to everyone"
   end
 
 end
