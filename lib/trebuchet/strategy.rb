@@ -20,6 +20,10 @@ module Trebuchet::Strategy
     elsif strategy_name.nil? || strategy_name == :default
       # Strategy hasn't been defined yet
       Default.instance
+    elsif strategy_name == :everyone
+      Everyone.instance
+    elsif strategy_name == :nobody
+      Nobody.instance
     elsif Custom.exists?(strategy_name)
       Custom.new(strategy_name, options)
     elsif klass = class_for_name(strategy_name)
@@ -39,6 +43,8 @@ module Trebuchet::Strategy
       [:percent, Percent],
       [:users, UserId],
       [:default, Default],
+      [:everyone, Everyone],
+      [:nobody, Nobody],
       [:custom, Custom],
       [:multiple, Multiple],
       [:experiment, Experiment],
