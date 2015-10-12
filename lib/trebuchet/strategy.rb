@@ -87,7 +87,7 @@ module Trebuchet::Strategy
 
     def value_in_range?(value)
       bucket =
-          Digest::SHA1.hexdigest("#{@feature.name}|#{value}").to_i(16) % 100
+          Trebuchet::SHA1.hexdigest("#{@feature.name}|#{value}").to_i(16) % 100
       bucket < @percentage
     end
 
@@ -205,7 +205,7 @@ module Trebuchet::Strategy
       return false if value == nil || !value.is_a?(Numeric)
       return false unless self.valid?
       # must hash feature name and value together to ensure uniform distribution
-      b = Digest::SHA1.hexdigest("experiment: #{@experiment_name.downcase} user: #{value}").to_i(16) % total_buckets
+      b = Trebuchet::SHA1.hexdigest("experiment: #{@experiment_name.downcase} user: #{value}").to_i(16) % total_buckets
       !!@bucket.include?(b + 1) # is user in this bucket?
     end
 
