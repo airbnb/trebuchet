@@ -40,4 +40,8 @@ class Trebuchet::Backend::RedisCached < Trebuchet::Backend::Redis
     @cached_strategies = nil
   end
 
+  def refresh
+    clear_cached_strategies if Time.now > cache_cleared_at + 60.seconds
+  end
+
 end
