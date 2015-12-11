@@ -15,16 +15,7 @@ class Trebuchet
     attr_accessor :current_block
 
     # Who are making the changes.
-    attr_reader :author
-
-    def set_author(author)
-      @author = author
-      if backend.respond_to?(:author=)
-        backend.author = author
-      end
-    end
-
-    alias_method :author=, :set_author
+    attr_accessor :author
 
     def backend
       self.backend = :memory unless @backend
@@ -38,9 +29,6 @@ class Trebuchet
       elsif backend_type.class.name =~ /Trebuchet::Backend/
         @backend = backend_type
       end
-
-      # Resetting author to update the new backend.
-      self.set_author(@author)
     end
 
     # this only works with additional args, e.g.: Trebuchet.backend = :memory
