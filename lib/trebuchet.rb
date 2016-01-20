@@ -14,6 +14,9 @@ class Trebuchet
     attr_accessor :exception_handler
     attr_accessor :current_block
 
+    # Who are making the changes.
+    attr_accessor :author
+
     def backend
       self.backend = :memory unless @backend
       @backend
