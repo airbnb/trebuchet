@@ -2,7 +2,7 @@
 
 routes_block = lambda do
   scope "trebuchet", :module => "trebuchet_rails" do
-    root :to => "features#index"
+    get '/' => "features#index"
     get 'timeline' => "features#timeline"
   end
 end
