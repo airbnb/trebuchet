@@ -111,6 +111,13 @@ class Trebuchet::Feature
     Trebuchet.backend.remove_feature(self.name)
   end
 
+  # add comments for a feature, as a place to hold change logs for example, to supported backends
+  def add_comment(comment)
+    if Trebuchet.backend.respond_to?(:add_comment)
+      Trebuchet.backend.add_comment(self.name, comment)
+    end
+  end
+
   def history
     return [] unless Trebuchet.backend.respond_to?(:get_history)
     Trebuchet.backend.get_history(self.name).map do |row|

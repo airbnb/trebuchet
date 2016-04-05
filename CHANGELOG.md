@@ -1,3 +1,6 @@
+## 0.9.6 (April 5, 2016)
+  - add :add_comment method to the Feature class
+
 ## 0.9.2 (October 11, 2015)
   - add :nobody and :everybody strategies
   - cache features
