@@ -50,7 +50,10 @@ module Trebuchet::Strategy
       [:experiment, Experiment],
       [:visitor_percent, VisitorPercent],
       [:hostname, Hostname],
-      [:visitor_experiment, VisitorExperiment]
+      [:visitor_experiment, VisitorExperiment],
+      [:logic_and, LogicAnd],
+      [:logic_or, LogicOr],
+      [:logic_not, LogicNot],
     ]
   end
 

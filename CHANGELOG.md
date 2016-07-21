@@ -1,3 +1,6 @@
+## 0.9.7 (July 20, 2016)
+  - logic operation strategies, e.g. AND, OR, and NOT
+
 ## 0.9.6 (April 5, 2016)
   - add :add_comment method to the Feature class
 
