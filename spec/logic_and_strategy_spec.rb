@@ -36,11 +36,11 @@ describe Trebuchet::Strategy::LogicAnd do
     Trebuchet.feature('pokemon').aim(
       :logic_and,
       {
-        percent: 100,
-        logic_and: {
-          users: [90, 91, 92],
-          logic_not: {
-            users: [90],
+        "percent" => 100,
+        "logic_and" => {
+          "users" => [90, 91, 92],
+          "logic_not" => {
+            "users" => [90],
           },
         },
       },

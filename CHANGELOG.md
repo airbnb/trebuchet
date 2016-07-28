@@ -1,3 +1,6 @@
+## 0.9.8 (July 27, 2016)
+  - convert deserialized strategy names to symbols
+
 ## 0.9.7 (July 20, 2016)
   - logic operation strategies, e.g. AND, OR, and NOT
 
