@@ -1,8 +1,10 @@
 class Trebuchet::Strategy::LogicBase < Trebuchet::Strategy::Base
 
   attr_reader :strategies
+  attr_reader :options
 
   def initialize(options = {})
+    @options = options
     @strategies = []
     options.each do |strategy_name, strategy_options|
       @strategies << Trebuchet::Strategy.find(strategy_name.to_sym, strategy_options)

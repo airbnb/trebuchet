@@ -1,3 +1,6 @@
+## 0.9.9 (Sep 15, 2016)
+  - minor change: keep raw option hash in logic strategies for editing purpose
+
 ## 0.9.8 (July 27, 2016)
   - convert deserialized strategy names to symbols
 
