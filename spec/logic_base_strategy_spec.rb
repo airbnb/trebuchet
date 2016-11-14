@@ -24,6 +24,7 @@ describe Trebuchet::Strategy::LogicBase do
 
     Trebuchet::Strategy.should_receive(:find).with(*args).and_return(strategy)
     strategy.should_receive(:launch_at?).with(user, request)
+    strategy.should_receive(:needs_user?).and_return(false)
 
     s = Trebuchet::Strategy::LogicOr.new({foo: 1})
     s.launch_at?(user, request)

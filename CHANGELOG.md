@@ -1,3 +1,6 @@
+## 0.9.10 (Nov 14, 2016)
+  - fix logical operators for logged out visitors
+
 ## 0.9.9 (Sep 15, 2016)
   - minor change: keep raw option hash in logic strategies for editing purpose
 
