@@ -22,7 +22,7 @@ class Trebuchet::Strategy::LogicBase < Trebuchet::Strategy::Base
   end
 
   def needs_user?
-    true # Always require a user to avoid confusions.
+    false
   end
 
 end
