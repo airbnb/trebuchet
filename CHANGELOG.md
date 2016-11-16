@@ -1,3 +1,6 @@
+## 0.9.11 (Nov 16, 2016)
+  - minor change: reduce number of times backend is hit in the launch methods
+
 ## 0.9.10 (Nov 14, 2016)
   - fix logical operators for logged out visitors
 

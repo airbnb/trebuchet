@@ -62,7 +62,9 @@ class Trebuchet::Feature
   end
 
   def launch_at?(user, request = nil)
-    (!strategy.needs_user? || !user.nil?) && strategy.launch_at?(user, request)
+    # Store strategy so that only one call to the backend is needed.
+    s = strategy
+    (!s.needs_user? || !user.nil?) && s.launch_at?(user, request)
   end
 
   def aim(strategy_name, options = nil)
