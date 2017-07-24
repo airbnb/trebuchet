@@ -24,6 +24,8 @@ module Trebuchet::Strategy
       Everyone.instance
     elsif strategy_name == :nobody
       Nobody.instance
+    elsif CustomRequestAware.exists?(strategy_name)
+      CustomRequestAware.new(strategy_name, options)
     elsif Custom.exists?(strategy_name)
       Custom.new(strategy_name, options)
     elsif klass = class_for_name(strategy_name)

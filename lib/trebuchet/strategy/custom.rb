@@ -21,7 +21,7 @@ class Trebuchet::Strategy::Custom < Trebuchet::Strategy::Base
   def self.exists?(name)
     @@custom_strategies.has_key?(name)
   end
-  
+
   def needs_user?
     false
     # re-enable after adding  { |options, user, request| }
