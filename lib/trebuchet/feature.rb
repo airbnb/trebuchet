@@ -120,6 +120,11 @@ class Trebuchet::Feature
     end
   end
 
+  def set_expiration_date(expiration_date)
+    return unless Trebuchet.backend.responds_to?(:set_expiration_date)
+    Trebuchet.backend.set_expiration_date(self.name, expiration_date)
+  end
+
   def history
     return [] unless Trebuchet.backend.respond_to?(:get_history)
     Trebuchet.backend.get_history(self.name).map do |row|

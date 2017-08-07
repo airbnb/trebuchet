@@ -1,3 +1,6 @@
+## 0.9.12 (Aug 3, 2017)
+  - Add setter for expiration date
+
 ## 0.9.11 (Nov 16, 2016)
   - minor change: reduce number of times backend is hit in the launch methods
 
