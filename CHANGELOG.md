@@ -1,3 +1,6 @@
+## 0.9.13 (Aug 8, 2017)
+  - Fix a typo
+
 ## 0.9.12 (Aug 3, 2017)
   - Add setter for expiration date
 
