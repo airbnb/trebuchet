@@ -1,4 +1,4 @@
-## 1.0.00 (Aug 9, 2017)
+## 0.9.16 (Aug 9, 2017)
   - Return expiration date config payload if the config exists
 
 ## 0.9.15 (Aug 9, 2017)
