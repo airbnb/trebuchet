@@ -1,3 +1,6 @@
+## 0.9.15 (Aug 9, 2017)
+  - Return payload for expiration date accessor
+
 ## 0.9.14 (Aug 9, 2017)
   - Expose expiration date accessor
 

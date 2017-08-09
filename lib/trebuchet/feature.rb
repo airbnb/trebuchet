@@ -122,7 +122,7 @@ class Trebuchet::Feature
 
   def expiration_date
     return unless Trebuchet.backend.respond_to?(:expiration_date)
-    Trebuchet.backend.expiration_date(self.name)
+    Trebuchet.backend.expiration_date(self.name).payload
   end
 
   def set_expiration_date(expiration_date)
