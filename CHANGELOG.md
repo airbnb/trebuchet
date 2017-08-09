@@ -1,5 +1,5 @@
 ## 0.9.16 (Aug 9, 2017)
-  - Return expiration date config payload if the config exists
+  - Don't raise an error if expiration date has not been previously set
 
 ## 0.9.15 (Aug 9, 2017)
   - Return payload for expiration date accessor
