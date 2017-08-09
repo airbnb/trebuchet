@@ -1,3 +1,6 @@
+## 0.9.14 (Aug 9, 2017)
+  - Expose expiration date accessor
+
 ## 0.9.13 (Aug 8, 2017)
   - Fix a typo
 

@@ -120,6 +120,11 @@ class Trebuchet::Feature
     end
   end
 
+  def expiration_date
+    return unless Trebuchet.backend.respond_to?(:expiration_date)
+    Trebuchet.backend.expiration_date(self.name)
+  end
+
   def set_expiration_date(expiration_date)
     return unless Trebuchet.backend.respond_to?(:set_expiration_date)
     Trebuchet.backend.set_expiration_date(self.name, expiration_date)
