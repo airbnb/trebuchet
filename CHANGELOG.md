@@ -1,3 +1,6 @@
+## 0.9.17 (Aug 15, 2017)
+  - adds CustomRequestAware strategy
+
 ## 0.9.16 (Aug 9, 2017)
   - Don't raise an error if expiration date has not been previously set
 

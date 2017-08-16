@@ -76,6 +76,10 @@ class Trebuchet
     Strategy::Custom.define(name, block)
   end
 
+  def self.define_request_aware_strategy(name, &block)
+    Strategy::CustomRequestAware.define(name, block)
+  end
+
   def self.visitor_id=(id_or_proc)
     if id_or_proc.is_a?(Proc)
       @@visitor_id = id_or_proc
@@ -156,6 +160,7 @@ require 'trebuchet/feature'
 require 'trebuchet/strategy'
 require 'trebuchet/strategy/base'
 require 'trebuchet/strategy/custom'
+require 'trebuchet/strategy/custom_request_aware'
 require 'trebuchet/strategy/default'
 require 'trebuchet/strategy/everyone'
 require 'trebuchet/strategy/experiment'
