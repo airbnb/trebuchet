@@ -120,11 +120,16 @@ class Trebuchet::Feature
     end
   end
 
+  # Retrieve the expiration date of the feature as a +DateTime+ object.
+  # Return nil if the feature does not have an expiration date.
   def expiration_date
     return unless Trebuchet.backend.respond_to?(:expiration_date)
-    Trebuchet.backend.expiration_date(self.name).try(:payload)
+    Trebuchet.backend.expiration_date(self.name)
   end
 
+  # Set the expiration date of the feature.
+  # Params:
+  # +expiration_date+:: +DateTime+ object indicating the expiration date
   def set_expiration_date(expiration_date)
     return unless Trebuchet.backend.respond_to?(:set_expiration_date)
     Trebuchet.backend.set_expiration_date(self.name, expiration_date)

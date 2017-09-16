@@ -1,3 +1,6 @@
+## 0.10.0 (Sep 18, 2017)
+  - Return DateTime type for method expiration_date
+
 ## 0.9.17 (Aug 15, 2017)
   - adds CustomRequestAware strategy
 

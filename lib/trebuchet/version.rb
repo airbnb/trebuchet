@@ -1,5 +1,5 @@
 class Trebuchet
 
-  VERSION = "0.9.17"
+  VERSION = "0.10.0"
 
 end
