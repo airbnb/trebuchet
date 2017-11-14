@@ -13,7 +13,18 @@ describe Trebuchet do
       Trebuchet::Feature.any_instance.should_receive(:launch_at?).once
       Trebuchet.new(nil).launch?('highly_experimental')
     end
-    
+
+    it "caches value of launch_at?" do
+      t = Trebuchet.new(nil)
+      Trebuchet.feature('highly_experimental').should_receive(:launch_at?).once
+      Trebuchet.feature('waste_of_time').should_receive(:launch_at?).once
+
+      t.launch?('highly_experimental')
+      t.launch?('waste_of_time')
+
+      t.launch?('highly_experimental')
+      t.launch?('waste_of_time')
+    end
   end
     
   describe "launch" do
