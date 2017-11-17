@@ -1,3 +1,6 @@
+## 0.10.0 (Nov 17, 2017)
+  - Cache Trebuchet#launch?
+
 ## 0.9.18 (Sep 18, 2017)
   - Do not expose internal format
 
