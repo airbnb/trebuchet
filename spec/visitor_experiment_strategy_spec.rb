@@ -6,23 +6,24 @@ describe Trebuchet::Strategy::VisitorExperiment do
     @feature_name = "Infrared Vision"
     @feature_name2 = "Alligator Tail"
     @experiment_name = "Superhumanity"
-    @trebuchet = Trebuchet.new(User.new(0), mock_request('abcdef'))
+    @user = User.new(0)
+    @mock_request = mock_request('abcdef')
+    @trebuchet = Trebuchet.new(@user, @mock_request)
   end
 
   it "should match a user in a bucket" do
     Trebuchet.aim(@feature_name, :visitor_experiment, :name => @experiment_name, :bucket => 1)
-    strategy = Trebuchet.feature(@feature_name).strategy
     should_not_launch(@feature_name, (1..50).to_a) # should never launch without a request
     # these values just happen to hash for the algorithm and experiment name
     positive = [5, 14, 15, 198, 200, 549]
     negative = [1, 2, 25, 550]
     positive.each do |i|
       Trebuchet.visitor_id = i
-      @trebuchet.launch?(@feature_name).should be_true
+      Trebuchet.feature(@feature_name).launch_at?(@user, @mock_request).should be_true
     end
     negative.each do |i|
       Trebuchet.visitor_id = i
-      @trebuchet.launch?(@feature_name).should be_false
+      Trebuchet.feature(@feature_name).launch_at?(@user, @mock_request).should be_false
     end
   end
   

@@ -107,7 +107,7 @@ class Trebuchet
   def initialize(current_user, request = nil)
     @current_user = current_user
     @request = request
-    @logs = {}
+    @result_cache = {}
   end
 
   def launch(feature, &block)
@@ -117,9 +117,15 @@ class Trebuchet
   end
 
   def launch?(feature)
-    result = !!Feature.find(feature).launch_at?(@current_user, @request)
-    Trebuchet.log(feature, result)
-    return result
+    result = @result_cache[feature]
+
+    if result.nil?
+      result = @result_cache[feature] =
+        !!Feature.find(feature).launch_at?(@current_user, @request)
+      Trebuchet.log(feature, result)
+    end
+
+    result
   rescue => e
     handle_exception(e, feature)
     return false

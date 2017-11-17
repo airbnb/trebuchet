@@ -39,15 +39,16 @@ describe Trebuchet::Strategy::VisitorPercentDeprecated do
       # offset of some_feature is 33
       Trebuchet.aim('some_feature', feature_name, 100)
       offset = Trebuchet.feature('some_feature').strategy.offset
-      t = Trebuchet.new(User.new(0), mock_request('12345'))
-      t.launch?('some_feature').should == true
+      user = User.new(0)
+      request = mock_request('12345')
+      Trebuchet.feature('some_feature').launch_at?(user, request).should == true
       visitor_id = Trebuchet.visitor_id.call
 
       Trebuchet.aim('some_feature', feature_name, 91) # 33 + 91 includes 123 % 100
-      t.launch?('some_feature').should == true
+      Trebuchet.feature('some_feature').launch_at?(user, request).should == true
 
       Trebuchet.aim('some_feature', feature_name, 90)
-      t.launch?('some_feature').should == false
+      Trebuchet.feature('some_feature').launch_at?(user, request).should == false
     end
 
     it 'should launch' do
@@ -91,20 +92,22 @@ describe Trebuchet::Strategy::VisitorPercentDeprecated do
 
     before do
       @feature = Trebuchet.feature("liberty")
-      @trebuchet = Trebuchet.new(User.new(0), mock_request('abcdef'))
+      @user = User.new(0)
+      @request = mock_request('abcdef')
+      @trebuchet = Trebuchet.new(@user, @request)
     end
 
     it "should use from and to" do
       @feature.aim(:visitor_percent_deprecated, :from => 5, :to => 10)
       Trebuchet.feature("liberty").strategy.offset.should == 0
       Trebuchet.visitor_id = 10
-      @trebuchet.launch?("liberty").should == true
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == true
       Trebuchet.visitor_id = 5
-      @trebuchet.launch?("liberty").should == true
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == true
       Trebuchet.visitor_id = 4
-      @trebuchet.launch?("liberty").should == false
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == false
       Trebuchet.visitor_id = 11
-      @trebuchet.launch?("liberty").should == false
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == false
     end
 
     it "should use a percentage" do
@@ -112,13 +115,13 @@ describe Trebuchet::Strategy::VisitorPercentDeprecated do
       offset = @feature.strategy.offset
       offset.should == 90
       Trebuchet.visitor_id = 24 + offset
-      @trebuchet.launch?("liberty").should == true
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == true
       Trebuchet.visitor_id = 0 + offset
-      @trebuchet.launch?("liberty").should == true
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == true
       Trebuchet.visitor_id = 5 + offset
-      @trebuchet.launch?("liberty").should == true
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == true
       Trebuchet.visitor_id = 25 + offset
-      @trebuchet.launch?("liberty").should == false
+      Trebuchet.feature("liberty").launch_at?(@user, @request).should == false
     end
 
   end

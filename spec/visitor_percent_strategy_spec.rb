@@ -32,15 +32,17 @@ describe Trebuchet::Strategy::VisitorPercent do
 
     it 'should launch' do
       Trebuchet.aim('some_feature', :visitor_percent, 100)
-      t = Trebuchet.new(User.new(0), mock_request('12345'))
-      t.launch?('some_feature').should == true
+      user = User.new(0)
+      request = mock_request('12345')
+
+      Trebuchet.feature('some_feature').launch_at?(user, request).should == true
       visitor_id = Trebuchet.visitor_id.call
 
       Trebuchet.aim('some_feature', :visitor_percent, 91)
-      t.launch?('some_feature').should == true
+      Trebuchet.feature('some_feature').launch_at?(user, request).should == true
 
       Trebuchet.aim('some_feature', :visitor_percent, 10)
-      t.launch?('some_feature').should == false
+      Trebuchet.feature('some_feature').launch_at?(user, request).should == false
     end
   end
 
