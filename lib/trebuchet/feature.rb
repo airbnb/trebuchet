@@ -67,23 +67,24 @@ class Trebuchet::Feature
     (!s.needs_user? || !user.nil?) && s.launch_at?(user, request)
   end
 
-  def aim(strategy_name, options = nil)
+  def aim(strategy_name, options = nil, force = false)
+
     if !@@deprecated_strategies_enabled &&
        Trebuchet::Strategy.deprecated_strategy_names.include?(strategy_name)
       raise "The #{strategy_name} strategy is deprecated."
     end
     if chained?
-      Trebuchet.backend.append_strategy(self.name, strategy_name, options)
+      Trebuchet.backend.append_strategy(self.name, strategy_name, options, force)
     else
-      Trebuchet.backend.set_strategy(self.name, strategy_name, options)
+      Trebuchet.backend.set_strategy(self.name, strategy_name, options, force)
     end
     @chained = true
     self
   end
 
   # add/edit just one strategy without affecting other chained strategies
-  def adjust(strategy_name, options = nil)
-    Trebuchet.backend.append_strategy(self.name, strategy_name, options)
+  def adjust(strategy_name, options = nil, force = false)
+    Trebuchet.backend.append_strategy(self.name, strategy_name, options, force)
     self
   end
 
