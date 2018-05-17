@@ -9,12 +9,12 @@ class Trebuchet::Backend::Memory
     @hash.fetch(feature_name, nil) || []
   end
 
-  def set_strategy(feature, strategy, options = nil, force = false)
+  def set_strategy(feature, strategy, options = nil)
     @archived.delete(feature)
     @hash.store(feature, [strategy, options])
   end
 
-  def append_strategy(feature, strategy, options = nil, force = false)
+  def append_strategy(feature, strategy, options = nil)
     @archived.delete(feature)
     strategies = get_strategy(feature) || []
     if i = strategies.index(strategy)

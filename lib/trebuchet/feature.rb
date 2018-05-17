@@ -67,24 +67,24 @@ class Trebuchet::Feature
     (!s.needs_user? || !user.nil?) && s.launch_at?(user, request)
   end
 
-  def aim(strategy_name, options = nil, force = false)
+  def aim(strategy_name, options = nil)
 
     if !@@deprecated_strategies_enabled &&
        Trebuchet::Strategy.deprecated_strategy_names.include?(strategy_name)
       raise "The #{strategy_name} strategy is deprecated."
     end
     if chained?
-      Trebuchet.backend.append_strategy(self.name, strategy_name, options, force)
+      Trebuchet.backend.append_strategy(self.name, strategy_name, options)
     else
-      Trebuchet.backend.set_strategy(self.name, strategy_name, options, force)
+      Trebuchet.backend.set_strategy(self.name, strategy_name, options)
     end
     @chained = true
     self
   end
 
   # add/edit just one strategy without affecting other chained strategies
-  def adjust(strategy_name, options = nil, force = false)
-    Trebuchet.backend.append_strategy(self.name, strategy_name, options, force)
+  def adjust(strategy_name, options = nil)
+    Trebuchet.backend.append_strategy(self.name, strategy_name, options)
     self
   end
 
@@ -132,6 +132,12 @@ class Trebuchet::Feature
   def set_expiration_date(expiration_date)
     return unless Trebuchet.backend.respond_to?(:set_expiration_date)
     Trebuchet.backend.set_expiration_date(self.name, expiration_date)
+  end
+
+  # Set the feature to be force depoyed.
+  def set_force()
+    return unless Trebuchet.backend.respond_to?(:set_force)
+    Trebuchet.backend.set_force(self.name)
   end
 
   def history

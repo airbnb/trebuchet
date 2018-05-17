@@ -13,11 +13,11 @@ class Trebuchet::Backend::Memcached
     @memcache.get(key(feature_name))
   end
 
-  def set_strategy(feature, strategy, options = nil, force = false)
+  def set_strategy(feature, strategy, options = nil)
     @memcache.set(key(feature), [strategy, options])
   end
 
-  def append_strategy(feature, strategy, options = nil, force = false)
+  def append_strategy(feature, strategy, options = nil)
     @memcache.set(key(feature), get_strategy(feature) + [strategy, options])
   end
   

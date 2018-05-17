@@ -45,13 +45,13 @@ class Trebuchet::Backend::Redis
     end
   end
 
-  def set_strategy(feature_name, strategy, options = nil, force = false)
+  def set_strategy(feature_name, strategy, options = nil)
     remove_strategy(feature_name)
-    append_strategy(feature_name, strategy, options, force)
+    append_strategy(feature_name, strategy, options)
     update_sentinel
   end
 
-  def append_strategy(feature_name, strategy, options = nil, force = false)
+  def append_strategy(feature_name, strategy, options = nil)
     @redis.srem(archived_feature_names_key, feature_name)
     @redis.hset(feature_key(feature_name), strategy, [options].to_json) # have to put options in container for json
     @redis.sadd(feature_names_key, feature_name)

@@ -10,11 +10,11 @@ class Trebuchet::Backend::Disabled
     [:default]
   end
 
-  def set_strategy(feature, strategy, options = nil, force = false)
+  def set_strategy(feature, strategy, options = nil)
     false
   end
 
-  def append_strategy(feature, strategy, options = nil, force = false)
+  def append_strategy(feature, strategy, options = nil)
     false
   end
   
