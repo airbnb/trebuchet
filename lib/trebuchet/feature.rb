@@ -68,7 +68,6 @@ class Trebuchet::Feature
   end
 
   def aim(strategy_name, options = nil)
-
     if !@@deprecated_strategies_enabled &&
        Trebuchet::Strategy.deprecated_strategy_names.include?(strategy_name)
       raise "The #{strategy_name} strategy is deprecated."
@@ -135,7 +134,7 @@ class Trebuchet::Feature
   end
 
   # Set the feature to be force depoyed.
-  def set_force()
+  def set_force
     return unless Trebuchet.backend.respond_to?(:set_force)
     Trebuchet.backend.set_force(self.name)
   end
