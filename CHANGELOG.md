@@ -1,4 +1,4 @@
-## 0.10.1 (Jul 2018)
+## 0.10.1 (Jul 13, 2018)
  - add PerDenomination strategy
 
 ## 0.10.0 (Nov 17, 2017)
