@@ -1,3 +1,6 @@
+## 0.10.2 (July 13, 2018)
+  - Add force deploy method
+
 ## 0.10.1 (Jul 13, 2018)
  - add PerDenomination strategy
 

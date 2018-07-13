@@ -133,6 +133,12 @@ class Trebuchet::Feature
     Trebuchet.backend.set_expiration_date(self.name, expiration_date)
   end
 
+  # Set the feature to be force depoyed.
+  def set_force
+    return unless Trebuchet.backend.respond_to?(:set_force)
+    Trebuchet.backend.set_force(self.name)
+  end
+
   def history
     return [] unless Trebuchet.backend.respond_to?(:get_history)
     Trebuchet.backend.get_history(self.name).map do |row|
