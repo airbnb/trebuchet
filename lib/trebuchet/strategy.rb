@@ -43,6 +43,7 @@ module Trebuchet::Strategy
       [:visitor_percent_deprecated, VisitorPercentDeprecated],
       [:percent_deprecated, PercentDeprecated],
       [:percent, Percent],
+      [:per_denomination, PerDenomination],
       [:users, UserId],
       [:default, Default],
       [:everyone, Everyone],
@@ -76,12 +77,8 @@ module Trebuchet::Strategy
     names[klass]
   end
 
-
-  ### Percentable module standardizes logic for percentage-based strategies
-
-  module Percentable
-
-    attr_reader :percentage
+  module PerDenominationable
+    attr_reader :numerator, :denominator
 
     def initialize(options)
       set_range_from_options(options)
@@ -89,27 +86,60 @@ module Trebuchet::Strategy
 
     # must be called from initialize
     def set_range_from_options(options)
-      if options == nil || options.is_a?(Numeric)
-        @percentage = options.to_i
-      else
-        @percentage = 0
+      raise ArgumentError, "Missing required input numerator" unless options[:numerator]
+      raise ArgumentError, "Missing required input denominator" unless options[:denominator]
+
+      @numerator = options[:numerator].to_i
+      @denominator = options[:denominator].to_i
+
+      raise ArgumentError, "Invalid denominator #{@denominator}" if @denominator <= 0
+      if @numerator > @denominator
+        raise ArgumentError, "Invalid numerator #{@numerator} > denominator #{@denominator}"
       end
     end
 
     def value_in_range?(value)
-      bucket =
-          Trebuchet::SHA1.hexdigest("#{@feature.name}|#{value}").to_i(16) % 100
-      bucket < @percentage
+      bucket = Trebuchet::SHA1.hexdigest("#{@feature.name}|#{value}").to_i(16) % denominator
+
+      bucket < numerator
+    end
+
+    def to_s
+      "#{numerator} / #{denominator} of users"
+    end
+
+    def export
+      super({ numerator: numerator, denominator: denominator })
+    end
+  end
+
+  ### Percentable module standardizes logic for percentage-based strategies
+
+  module Percentable
+    include PerDenominationable
+
+    alias_method :percentage, :numerator
+
+    # must be called from initialize
+    def set_range_from_options(options)
+      numerator =
+        if options == nil || options.is_a?(Numeric)
+          options.to_i
+        else
+          0
+        end
+
+      super(numerator: numerator, denominator: 100)
     end
 
     def to_s
       kind = self.name == :visitor_percent ? "visitors" : "users"
-      percentage_str = "#{@percentage}% of #{kind}"
+      percentage_str = "#{percentage}% of #{kind}"
       "#{percentage_str}"
     end
 
     def export
-      super @percentage
+      super(percentage)
     end
   end
 
