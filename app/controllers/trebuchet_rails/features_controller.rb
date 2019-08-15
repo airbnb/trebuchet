@@ -1,8 +1,12 @@
 module TrebuchetRails
-  
+
   class FeaturesController < ApplicationController
-  
-    before_filter :control_access, :get_time_zone
+
+    if Rails::VERSION::MAJOR >= 5
+      before_action :control_access, :get_time_zone
+    else
+      before_filter :control_access, :get_time_zone
+    end
 
     layout 'trebuchet'
     helper :trebuchet
