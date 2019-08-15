@@ -1,3 +1,6 @@
+## 0.11.0 (Aug 15, 2019)
+ - add Rails 5 compatibility
+
 ## 0.10.1 (Jul 13, 2018)
  - add PerDenomination strategy
 
