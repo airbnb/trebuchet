@@ -1,21 +1,19 @@
 require 'digest/sha1'
-
+require 'forwardable'
 class Trebuchet
-
-  @@visitor_id = nil
-
   # initialize a single one to save object allocations
   # Todo perhaps choose a better hash instead of sha1
   SHA1 = Digest::SHA1.new
 
   class << self
-    attr_accessor :admin_view, :admin_edit
-    attr_accessor :time_zone
-    attr_accessor :exception_handler
-    attr_accessor :current_block
+    extend Forwardable
 
-    # Who are making the changes.
-    attr_accessor :author
+    def_delegators :state, :current=, :current_block=, :current_block,
+      :logs, :admin_view, :admin_view=, :admin_edit, :admin_edit=,
+      :time_zone, :time_zone=, :author=, :author, :visitor_id
+
+    attr_accessor :exception_handler
+    attr_accessor :threadsafe_state
 
     def backend
       self.backend = :memory unless @backend
@@ -34,30 +32,65 @@ class Trebuchet
     # this only works with additional args, e.g.: Trebuchet.backend = :memory
     alias_method :backend=, :set_backend
 
+    alias_method :threadsafe_state?, :threadsafe_state
+
     # Logging done at class level
     # TODO: split by user identifier so instance can return scoped to one user
     # (in case multiple users have user.trebuchet called)
     def initialize_logs
-      @logs = {}
+      state.logs = {}
     end
 
     def log(feature_name, result)
-      initialize_logs if @logs == nil
-      @logs[feature_name] = result
+      initialize_logs if state.logs.nil?
+      logs[feature_name] = result
     end
 
-    attr_reader :logs
-    attr_accessor :current
+    def logs
+      state.logs
+    end
+
+    def current=(other)
+      state.current = other
+    end
 
     def current
-      @current ||= @current_block.call if @current_block.respond_to?(:call)
-      @current || new(nil) # return an blank Trebuchet instance if @current is not set
+      state.current ||= current_block.call if current_block.respond_to?(:call)
+      state.current || new(nil) # return an blank Trebuchet instance if @current is not set
     end
 
     def reset_current!
-      @current = nil
+      self.current = nil
     end
 
+    def thread_local_key
+      :trebuchet_state
+    end
+
+    # state is a representation of the current context of Trebuchet such as current and
+    # current_proc, which are expected to be different between threads or fibers.
+    # exception_handler and backend are not included in this state object as they are
+    # not expected to change from fiber to fiber or request to request, therefore they
+    # must be thread/fibersafe on their own accord.
+    def state
+      if threadsafe_state?
+        Thread.current[thread_local_key] ||= State.new
+      else
+        @state ||= State.new
+      end
+    end
+
+    def state=(new_state)
+      if threadsafe_state?
+        Thread.current[thread_local_key] = new_state
+      else
+        @state = new_state
+      end
+    end
+
+    def threadsafe_state?
+      threadsafe_state
+    end
   end
 
   def self.aim(feature_name, *args)
@@ -82,16 +115,12 @@ class Trebuchet
 
   def self.visitor_id=(id_or_proc)
     if id_or_proc.is_a?(Proc)
-      @@visitor_id = id_or_proc
+      state.visitor_id = id_or_proc
     elsif id_or_proc.is_a?(Integer)
-      @@visitor_id = proc { |request| id_or_proc }
+      state.visitor_id = proc { |request| id_or_proc }
     else
-      @@visitor_id = nil
+      state.visitor_id = nil
     end
-  end
-
-  def self.visitor_id
-    @@visitor_id
   end
 
   def self.use_with_rails!
@@ -162,6 +191,7 @@ require 'trebuchet/error'
 require 'trebuchet/backend'
 require 'trebuchet/backend/disabled'
 # load other backends on demand so their dependencies can load first
+require 'trebuchet/state'
 require 'trebuchet/feature'
 require 'trebuchet/strategy'
 require 'trebuchet/strategy/base'

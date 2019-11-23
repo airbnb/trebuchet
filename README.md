@@ -17,7 +17,7 @@ Setup
 
 
 Trebuchet defaults to storing data in memory, or can be used with Redis or Memcache as a data store:
-    
+
     Trebuchet.set_backend :memcached
     Trebuchet.set_backend :redis, :client => Redis.new(:host => 'example.com')
     Trebuchet.set_backend :redis_cached, :client => Redis.new(:host => 'example.com')
