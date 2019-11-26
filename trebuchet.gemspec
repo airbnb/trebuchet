@@ -19,14 +19,8 @@ Gem::Specification.new do |s|
 
   # redis and memcache are optional
   s.add_dependency 'json'
-  
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency("rspec", ["~> 2.5.0"])
-    else
-    end
-  else
-  end
+  s.add_development_dependency 'rspec', '~> 2.12.0'
+  s.add_development_dependency 'mock_redis', '~> 0.6.5'
+  s.add_development_dependency 'rake', '>= 10.0.3'
 end

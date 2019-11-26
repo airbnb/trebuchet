@@ -103,3 +103,10 @@ First, set the visitor id either directly (in a before filter) or as a proc:
 
 If you're using a proc, Trebuchet passes in the request object. It expects that the proc returns an integer.
 If it returns anything else, Trebuchet will not launch.
+
+Fiber and Thread Safety
+-------------
+
+Trebuchet stores global state such as `Trebuchet.current` which is thread and fiber unsafe behavior. In order to use these
+features in a fiber or threaded environment, `Trebuchet.threadsafe_state = true` will cause Trebuchet to store these values
+in a thread-local state object instead. This is not the default for backward compatability reasons.

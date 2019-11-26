@@ -1,3 +1,6 @@
+## 0.12.0 (Nov 26, 2019)
+ - Contain fiber-unsafe state of the main Trebuchet class into a state object and optionally store it as a thread/fiber local.
+
 ## 0.11.0 (Aug 15, 2019)
  - add Rails 5 compatibility
 
