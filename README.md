@@ -62,9 +62,9 @@ The code between do .. end will only run if the strategy for 'time_machine' allo
 You can also use it in a controller:
 
     def index
-        trebuchet.launch('time_machine') do
-            @time_machine = TimeMachine.new
-        end
+      trebuchet.launch('time_machine') do
+        @time_machine = TimeMachine.new
+      end
     end
 
 
@@ -74,7 +74,7 @@ Custom Strategies
 Trebuchet ships with a number of default strategies but you can also define your own custom strategies like so:
 
     Trebuchet.define_strategy(:admins) do |user|
-        !!(user && user.has_role?(:admin))
+      !!(user && user.has_role?(:admin))
     end
 
 controller.current_user is yielded to the block and it should return true for users you want to launch to.
