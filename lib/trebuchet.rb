@@ -140,7 +140,10 @@ class Trebuchet
   end
 
   def launch(feature, &block)
-    if launch?(feature)
+    unless block_given?
+      # If there's no block, the caller probably meant launch?
+      return launch?(feature)
+    elsif launch?(feature)
       yield if block_given?
     end
   end
